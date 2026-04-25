@@ -215,9 +215,7 @@ function qs(n) {
   setSrv(q[4]);
 }
 
-// ── MATH ─────────────────────────────────────────────────────
-
-// P(server wins game | p = point win prob on serve)
+// P(server wins game)
 function gameProb(p) {
   if (p <= 0) return 0;
   if (p >= 1) return 1;
@@ -227,135 +225,96 @@ function gameProb(p) {
   return Math.pow(p,4) + 4*Math.pow(p,4)*q + 10*Math.pow(p,4)*q*q + deuce*wD;
 }
 
-// P(A wins tiebreak) — iterative via table, no recursion
+// Tiebreak: pure iterative, backward induction, no recursion
+// Max tiebreak score is 7 (or more in deuce), we cap table at 8+8
 function tbWin(pa, pb, aFirst) {
-  // Build table for ta=0..13, tb=0..13
-  // tb[ta][tb] = P(A wins tiebreak from this state)
-  var T = [];
-  var i, j;
-  for (i = 0; i <= 14; i++) {
-    T[i] = [];
-    for (j = 0; j <= 14; j++) {
-      T[i][j] = -1;
-    }
+  var SIZE = 9; // 0..8 for each player (7 wins needed, max deuce at 6-6)
+  // Create flat array: index = ta*SIZE + tb
+  var T = new Array(SIZE * SIZE);
+  var ta, tb, idx, aS, pW;
+
+  // Who serves at this point total
+  function aServesNow(total) {
+    if (total === 0) return aFirst;
+    var grp = Math.floor((total - 1) / 2);
+    return aFirst ? (grp % 2 === 0) : (grp % 2 !== 0);
   }
 
-  // Who serves at point index `tot` (0-based total points played so far)
-  function aServes(tot) {
-    if (tot === 0) return aFirst;
-    var grp = Math.floor((tot - 1) / 2);
-    var firstSrv = (grp % 2 === 1);
-    return aFirst ? firstSrv : !firstSrv;
-  }
-
-  // Fill iteratively using memoization with explicit stack
-  function solve(ta, tb) {
-    if (T[ta][tb] !== -1) return T[ta][tb];
-    // Terminal
-    if (ta >= 7 && ta - tb >= 2) { T[ta][tb] = 1; return 1; }
-    if (tb >= 7 && tb - ta >= 2) { T[ta][tb] = 0; return 0; }
-    var aS = aServes(ta + tb);
-    var pW = aS ? pa : (1 - pb);
-    var v = pW * solve(ta+1, tb) + (1-pW) * solve(ta, tb+1);
-    T[ta][tb] = v;
-    return v;
-  }
-
-  // Pre-fill terminal states
-  for (i = 0; i <= 14; i++) {
-    for (j = 0; j <= 14; j++) {
-      if (i >= 7 && i - j >= 2) T[i][j] = 1;
-      else if (j >= 7 && j - i >= 2) T[i][j] = 0;
-    }
-  }
-
-  // Fill backwards from high scores to low
-  for (i = 13; i >= 0; i--) {
-    for (j = 13; j >= 0; j--) {
-      if (T[i][j] === -1) {
-        var aS2 = aServes(i + j);
-        var pW2 = aS2 ? pa : (1 - pb);
-        // ensure children are filled
-        var r1 = (T[i+1] && T[i+1][j] !== -1) ? T[i+1][j] : solve(i+1, j);
-        var r2 = (T[i] && T[i][j+1] !== -1) ? T[i][j+1] : solve(i, j+1);
-        T[i][j] = pW2 * r1 + (1-pW2) * r2;
+  // Fill terminal states first
+  for (ta = 0; ta < SIZE; ta++) {
+    for (tb = 0; tb < SIZE; tb++) {
+      idx = ta * SIZE + tb;
+      if (ta >= 7 && ta - tb >= 2) {
+        T[idx] = 1.0;
+      } else if (tb >= 7 && tb - ta >= 2) {
+        T[idx] = 0.0;
+      } else {
+        T[idx] = -1; // not yet computed
       }
     }
   }
 
-  return T[0][0];
+  // Backward induction from high scores down
+  for (ta = SIZE - 2; ta >= 0; ta--) {
+    for (tb = SIZE - 2; tb >= 0; tb--) {
+      idx = ta * SIZE + tb;
+      if (T[idx] !== -1) continue; // already set (terminal)
+      aS = aServesNow(ta + tb);
+      pW = aS ? pa : (1 - pb);
+      var vWin  = T[(ta+1) * SIZE + tb];
+      var vLose = T[ta * SIZE + (tb+1)];
+      // If children not computed yet (shouldn't happen with backward order, but safety):
+      if (vWin === -1)  vWin  = 0.5;
+      if (vLose === -1) vLose = 0.5;
+      T[idx] = pW * vWin + (1 - pW) * vLose;
+    }
+  }
+
+  return T[0];
 }
 
-// P(A wins set) — iterative, no recursion
-function setWin(gA, gB, aServes0, ha, hb, pa, pb) {
-  // Cache: key = a*1000 + b*10 + srv
+// Set: pure iterative, backward induction, no recursion
+function setWin(startA, startB, aServesFirst, ha, hb, pa, pb) {
+  // States: games 0..7 for each player, server bit
+  // We use a plain object as cache: key = "a_b_s"
   var cache = {};
+  var a, b, s, key, pW, vWin, vLose, isTerminal, val;
 
-  function terminal(a, b) {
+  function termVal(a, b) {
+    // Returns win(1), loss(0), or -1 if not terminal
     if (a === 7 && b === 6) return 1;
     if (b === 7 && a === 6) return 0;
-    if (a === 7 && b === 5) return 1;
-    if (b === 7 && a === 5) return 0;
-    if (a >= 6 && a - b >= 2) return 1;
-    if (b >= 6 && b - a >= 2) return 0;
-    return -1; // not terminal
+    if (a >= 6 && b <= a-2) return 1;
+    if (b >= 6 && a <= b-2) return 0;
+    return -1;
   }
 
-  function solve(a, b, s) {
-    var t = terminal(a, b);
-    if (t !== -1) return t;
-    var k = a * 1000 + b * 10 + (s ? 1 : 0);
-    if (cache[k] !== undefined) return cache[k];
-    if (a === 6 && b === 6) {
-      cache[k] = tbWin(pa, pb, s);
-      return cache[k];
-    }
-    var pW = s ? ha : (1 - hb);
-    cache[k] = pW * solve(a+1, b, !s) + (1-pW) * solve(a, b+1, !s);
-    return cache[k];
-  }
-
-  // Pre-fill iteratively from end states backwards
-  var a, b, s, k, t, pW;
+  // Fill all states from high game counts down
   for (a = 7; a >= 0; a--) {
     for (b = 7; b >= 0; b--) {
       for (s = 0; s <= 1; s++) {
-        t = terminal(a, b);
-        if (t !== -1) {
-          k = a*1000 + b*10 + s;
-          cache[k] = t;
-        } else if (a === 6 && b === 6) {
-          k = a*1000 + b*10 + s;
-          cache[k] = tbWin(pa, pb, s === 1);
+        key = a + '_' + b + '_' + s;
+        val = termVal(a, b);
+        if (val !== -1) {
+          cache[key] = val;
+          continue;
         }
+        if (a === 6 && b === 6) {
+          cache[key] = tbWin(pa, pb, s === 1);
+          continue;
+        }
+        pW = (s === 1) ? ha : (1 - hb);
+        var keyWin  = (a+1) + '_' + b     + '_' + (1-s);
+        var keyLose = a     + '_' + (b+1) + '_' + (1-s);
+        vWin  = (cache[keyWin]  !== undefined) ? cache[keyWin]  : 0.5;
+        vLose = (cache[keyLose] !== undefined) ? cache[keyLose] : 0.5;
+        cache[key] = pW * vWin + (1 - pW) * vLose;
       }
     }
   }
 
-  // Now fill remaining states backwards
-  for (a = 6; a >= 0; a--) {
-    for (b = 6; b >= 0; b--) {
-      for (s = 0; s <= 1; s++) {
-        k = a*1000 + b*10 + s;
-        if (cache[k] === undefined) {
-          t = terminal(a, b);
-          if (t !== -1) {
-            cache[k] = t;
-          } else {
-            pW = (s === 1) ? ha : (1 - hb);
-            var k1 = (a+1)*1000 + b*10 + (1-s);
-            var k2 = a*1000 + (b+1)*10 + (1-s);
-            var v1 = (cache[k1] !== undefined) ? cache[k1] : solve(a+1, b, s===0);
-            var v2 = (cache[k2] !== undefined) ? cache[k2] : solve(a, b+1, s===0);
-            cache[k] = pW * v1 + (1-pW) * v2;
-          }
-        }
-      }
-    }
-  }
-
-  var startKey = gA*1000 + gB*10 + (aServes0 ? 1 : 0);
-  return cache[startKey] !== undefined ? cache[startKey] : solve(gA, gB, aServes0);
+  var startKey = startA + '_' + startB + '_' + (aServesFirst ? 1 : 0);
+  return cache[startKey] !== undefined ? cache[startKey] : 0.5;
 }
 
 function freshS(ha, hb, pa, pb) {
@@ -366,11 +325,12 @@ function freshS(ha, hb, pa, pb) {
 
 function matchWin(sA, sB, gA, gB, aS, ha, hb, pa, pb) {
   var pCur = setWin(gA, gB, aS, ha, hb, pa, pb);
-  var S = freshS(ha, hb, pa, pb);
+  var S    = freshS(ha, hb, pa, pb);
   if (sA === 1 && sB === 1) return pCur;
-  if (sA === 1 && sB === 0) return pCur + (1-pCur) * S;
+  if (sA === 1 && sB === 0) return pCur + (1 - pCur) * S;
   if (sA === 0 && sB === 1) return pCur * S;
-  return pCur * S * (2-S) + (1-pCur) * S * S;
+  // 0-0: playing set 1
+  return pCur * S * (2 - S) + (1 - pCur) * S * S;
 }
 
 var BASE = {
@@ -383,10 +343,10 @@ function calibrate(base, Pelo) {
   function compute(d) {
     var pf = base + d, pu = base - d;
     var hf = gameProb(pf), hu = gameProb(pu);
-    var Saf = setWin(0,0,true,  hf,hu,pf,pu);
-    var Sbf = setWin(0,0,false, hf,hu,pf,pu);
-    var S = (Saf + Sbf) / 2;
-    return Saf*S*(2-S) + (1-Saf)*S*S;
+    var Saf = setWin(0, 0, true,  hf, hu, pf, pu);
+    var Sbf = setWin(0, 0, false, hf, hu, pf, pu);
+    var S   = (Saf + Sbf) / 2;
+    return Saf * S * (2-S) + (1-Saf) * S * S;
   }
   var lo = 0, hi = maxD, m;
   for (var i = 0; i < 60; i++) {
@@ -396,7 +356,6 @@ function calibrate(base, Pelo) {
   return (lo + hi) / 2;
 }
 
-// ── MAIN ─────────────────────────────────────────────────────
 function calc() {
   try {
     var eA = parseFloat(document.getElementById('elo-a').value);
@@ -423,9 +382,10 @@ function calc() {
     if (gA < 0 || gA > 7 || gB < 0 || gB > 7) return fail('Games: valid values are 0 to 7');
 
     var favIsA = (eA > eB);
-    var eloFav = Math.max(eA,eB), eloUnd = Math.min(eA,eB);
+    var eloFav = Math.max(eA, eB);
+    var eloUnd = Math.min(eA, eB);
     var gap    = eloFav - eloUnd;
-    var Pelo   = 1 / (1 + Math.pow(10, -gap/400));
+    var Pelo   = 1 / (1 + Math.pow(10, -gap / 400));
 
     var sF   = favIsA ? sA : sB;
     var sU   = favIsA ? sB : sA;
@@ -435,8 +395,10 @@ function calc() {
 
     var base  = BASE[tour][surf];
     var delta = calibrate(base, Pelo);
-    var pf = base + delta, pu = base - delta;
-    var hf = gameProb(pf),  hu = gameProb(pu);
+    var pf = base + delta;
+    var pu = base - delta;
+    var hf = gameProb(pf);
+    var hu = gameProb(pu);
 
     var prob   = matchWin(sF, sU, gF, gU, favS, hf, hu, pf, pu);
     var pct    = Math.round(prob  * 1000) / 10;
@@ -450,10 +412,10 @@ function calc() {
 
     var bc  = { E0:'#4d9fff', E1:'#4d9fff', E2:'#00e5a0', E3:'#ffc947' };
     var bEl = document.getElementById('r-band');
-    bEl.textContent    = band + '  |  Gap: ' + Math.round(gap) + ' pts';
-    bEl.style.color    = bc[band];
+    bEl.textContent      = band + '  |  Gap: ' + Math.round(gap) + ' pts';
+    bEl.style.color      = bc[band];
     bEl.style.background = bc[band] + '18';
-    bEl.style.border   = '1px solid ' + bc[band] + '44';
+    bEl.style.border     = '1px solid ' + bc[band] + '44';
 
     document.getElementById('r-pre').textContent  = prePct.toFixed(1) + '%';
     document.getElementById('r-gap').textContent  = Math.round(gap);

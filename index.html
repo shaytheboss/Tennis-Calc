@@ -19,10 +19,6 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 .header-icon{font-size:28px;filter:drop-shadow(0 0 8px rgba(0,212,255,.5));}
 .header-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--accent);text-shadow:0 0 20px rgba(0,212,255,.3);}
 .header-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:.5px;}
-.conf-badges{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
-.badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;border:1px solid currentColor;opacity:.8;}
-.badge-h{color:var(--green);background:rgba(0,229,160,.08);}
-.badge-m{color:var(--gold);background:rgba(255,201,71,.08);}
 .tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--bg2);border-bottom:2px solid var(--border);}
 .tab{padding:13px 8px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;position:relative;top:2px;}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,.04);}
@@ -47,7 +43,6 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 .qs{padding:7px 9px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .15s;text-align:right;}
 .qs:hover{border-color:var(--accent);background:rgba(0,212,255,.04);}
 .qs.gold-state{border-color:rgba(255,201,71,.3);}
-.qs.gold-state:hover{border-color:var(--gold);}
 .qs-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);display:block;margin-bottom:2px;}
 .qs-num.g{color:var(--gold);}
 .qs-desc{font-size:11px;color:var(--muted);line-height:1.3;}
@@ -84,10 +79,6 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
     </div>
   </div>
   <div class="header-sub">MARKOV CHAIN · ELO-CALIBRATED · HARD / CLAY / GRASS</div>
-  <div class="conf-badges">
-    <span class="badge badge-h">[H] Empirical</span>
-    <span class="badge badge-m">[M] Markov + Elo</span>
-  </div>
 </div>
 
 <div class="tabs">
@@ -101,15 +92,15 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
     <div class="card-title">Elo Rating</div>
     <div class="row2">
       <div class="field">
-        <label>Player A — Elo</label>
-        <input type="number" id="elo-a" placeholder="2100" min="500" max="3500" inputmode="numeric">
+        <label>Player A</label>
+        <input type="number" id="elo-a" placeholder="2100" inputmode="numeric">
       </div>
       <div class="field">
-        <label>Player B — Elo</label>
-        <input type="number" id="elo-b" placeholder="1900" min="500" max="3500" inputmode="numeric">
+        <label>Player B</label>
+        <input type="number" id="elo-b" placeholder="1900" inputmode="numeric">
       </div>
     </div>
-    <div class="helper">Favorite = higher Elo (regardless of A/B label)</div>
+    <div class="helper">Favorite = higher Elo (regardless of A/B)</div>
   </div>
 
   <div class="card">
@@ -122,8 +113,7 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
   </div>
 
   <div class="card">
-    <div class="card-title">Current Match State</div>
-
+    <div class="card-title">Match State</div>
     <div style="margin-bottom:12px">
       <div class="field" style="margin-bottom:4px"><label>Sets Won</label></div>
       <div class="row3">
@@ -132,7 +122,6 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
         <div class="field"><label>Player B</label><input type="number" id="sets-b" value="0" min="0" max="1" inputmode="numeric"></div>
       </div>
     </div>
-
     <div style="margin-bottom:12px">
       <div class="field" style="margin-bottom:4px"><label>Games in Current Set</label></div>
       <div class="row3">
@@ -141,7 +130,6 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
         <div class="field"><label>Player B</label><input type="number" id="games-b" value="0" min="0" max="7" inputmode="numeric"></div>
       </div>
     </div>
-
     <div class="field">
       <label>Who is serving?</label>
       <div class="btn-group">
@@ -152,7 +140,7 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
   </div>
 
   <div class="card">
-    <div class="card-title">Quick States — click to fill</div>
+    <div class="card-title">Quick States</div>
     <div class="quick-grid">
       <button class="qs" onclick="qs(0)"><span class="qs-num">0</span><span class="qs-desc">Match start 0-0</span></button>
       <button class="qs" onclick="qs(1)"><span class="qs-num">1</span><span class="qs-desc">Up 1 set, 3-3 set2, A serves</span></button>
@@ -160,13 +148,12 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
       <button class="qs" onclick="qs(3)"><span class="qs-num">3</span><span class="qs-desc">Down 1 set, 1-1 set2, A serves</span></button>
       <button class="qs" onclick="qs(4)"><span class="qs-num">4</span><span class="qs-desc">1-1 sets, 3-3 set3, A serves</span></button>
       <button class="qs" onclick="qs(5)"><span class="qs-num">5</span><span class="qs-desc">1-1 sets, 3-3 set3, B serves</span></button>
-      <button class="qs gold-state" onclick="qs(6)"><span class="qs-num g">★ 6</span><span class="qs-desc">Up set + break, 3-1 set2, A serves</span></button>
-      <button class="qs" onclick="qs(7)"><span class="qs-num">7</span><span class="qs-desc">Down set + break, 1-3 set2, B serves</span></button>
+      <button class="qs gold-state" onclick="qs(6)"><span class="qs-num g">★ 6</span><span class="qs-desc">Up set+break, 3-1 set2, A serves</span></button>
+      <button class="qs" onclick="qs(7)"><span class="qs-num">7</span><span class="qs-desc">Down set+break, 1-3 set2, B serves</span></button>
       <button class="qs" onclick="qs(8)"><span class="qs-num">8</span><span class="qs-desc">1-1 sets, 5-5 set3, A serves</span></button>
       <button class="qs gold-state" onclick="qs(9)"><span class="qs-num g">★ 9</span><span class="qs-desc">1-1 sets, 5-4 set3, A serves</span></button>
       <button class="qs" onclick="qs(10)" style="grid-column:span 2"><span class="qs-num">10</span><span class="qs-desc">1-1 sets, 0-0 start of set3, A serves</span></button>
     </div>
-    <div class="helper" style="margin-top:8px">★ = 90%+ states (E2 player) per reference table</div>
   </div>
 
   <div class="error" id="err"></div>
@@ -190,7 +177,7 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 <script>
 var tour = 'ATP';
 var surf = 'hard';
-var srv = 'A';
+var srv  = 'A';
 
 function setTour(t) {
   tour = t;
@@ -200,11 +187,10 @@ function setTour(t) {
 
 function setSurf(s) {
   surf = s;
-  var surfaces = ['hard', 'clay', 'grass'];
-  for (var i = 0; i < surfaces.length; i++) {
-    var x = surfaces[i];
-    var b = document.getElementById('sf-' + x);
-    b.className = 'btn-surf' + (x === s ? ' active-' + x : '');
+  var list = ['hard','clay','grass'];
+  for (var i = 0; i < list.length; i++) {
+    var b = document.getElementById('sf-' + list[i]);
+    b.className = 'btn-surf' + (list[i] === s ? ' active-' + s : '');
   }
 }
 
@@ -215,17 +201,9 @@ function setSrv(s) {
 }
 
 var QS = [
-  [0,0,0,0,'A'],
-  [1,0,3,3,'A'],
-  [1,0,1,3,'B'],
-  [0,1,1,1,'A'],
-  [1,1,3,3,'A'],
-  [1,1,3,3,'B'],
-  [1,0,3,1,'A'],
-  [0,1,1,3,'B'],
-  [1,1,5,5,'A'],
-  [1,1,5,4,'A'],
-  [1,1,0,0,'A']
+  [0,0,0,0,'A'],[1,0,3,3,'A'],[1,0,1,3,'B'],[0,1,1,1,'A'],
+  [1,1,3,3,'A'],[1,1,3,3,'B'],[1,0,3,1,'A'],[0,1,1,3,'B'],
+  [1,1,5,5,'A'],[1,1,5,4,'A'],[1,1,0,0,'A']
 ];
 
 function qs(n) {
@@ -237,6 +215,9 @@ function qs(n) {
   setSrv(q[4]);
 }
 
+// ── MATH ─────────────────────────────────────────────────────
+
+// P(server wins game | p = point win prob on serve)
 function gameProb(p) {
   if (p <= 0) return 0;
   if (p >= 1) return 1;
@@ -246,46 +227,135 @@ function gameProb(p) {
   return Math.pow(p,4) + 4*Math.pow(p,4)*q + 10*Math.pow(p,4)*q*q + deuce*wD;
 }
 
-function tbWin(p_a, p_b, aFirst) {
-  var c = {};
-  function srvAt(tot) {
-    if (tot === 0) return true;
-    return Math.floor((tot - 1) / 2) % 2 === 1;
+// P(A wins tiebreak) — iterative via table, no recursion
+function tbWin(pa, pb, aFirst) {
+  // Build table for ta=0..13, tb=0..13
+  // tb[ta][tb] = P(A wins tiebreak from this state)
+  var T = [];
+  var i, j;
+  for (i = 0; i <= 14; i++) {
+    T[i] = [];
+    for (j = 0; j <= 14; j++) {
+      T[i][j] = -1;
+    }
   }
-  function w(ta, tb) {
-    if (ta >= 7 && ta - tb >= 2) return 1;
-    if (tb >= 7 && tb - ta >= 2) return 0;
-    var k = ta * 100 + tb;
-    if (c[k] !== undefined) return c[k];
-    var fs = srvAt(ta + tb);
-    var aS = aFirst ? fs : !fs;
-    var pW = aS ? p_a : (1 - p_b);
-    c[k] = pW * w(ta+1, tb) + (1-pW) * w(ta, tb+1);
-    return c[k];
+
+  // Who serves at point index `tot` (0-based total points played so far)
+  function aServes(tot) {
+    if (tot === 0) return aFirst;
+    var grp = Math.floor((tot - 1) / 2);
+    var firstSrv = (grp % 2 === 1);
+    return aFirst ? firstSrv : !firstSrv;
   }
-  return w(0, 0);
+
+  // Fill iteratively using memoization with explicit stack
+  function solve(ta, tb) {
+    if (T[ta][tb] !== -1) return T[ta][tb];
+    // Terminal
+    if (ta >= 7 && ta - tb >= 2) { T[ta][tb] = 1; return 1; }
+    if (tb >= 7 && tb - ta >= 2) { T[ta][tb] = 0; return 0; }
+    var aS = aServes(ta + tb);
+    var pW = aS ? pa : (1 - pb);
+    var v = pW * solve(ta+1, tb) + (1-pW) * solve(ta, tb+1);
+    T[ta][tb] = v;
+    return v;
+  }
+
+  // Pre-fill terminal states
+  for (i = 0; i <= 14; i++) {
+    for (j = 0; j <= 14; j++) {
+      if (i >= 7 && i - j >= 2) T[i][j] = 1;
+      else if (j >= 7 && j - i >= 2) T[i][j] = 0;
+    }
+  }
+
+  // Fill backwards from high scores to low
+  for (i = 13; i >= 0; i--) {
+    for (j = 13; j >= 0; j--) {
+      if (T[i][j] === -1) {
+        var aS2 = aServes(i + j);
+        var pW2 = aS2 ? pa : (1 - pb);
+        // ensure children are filled
+        var r1 = (T[i+1] && T[i+1][j] !== -1) ? T[i+1][j] : solve(i+1, j);
+        var r2 = (T[i] && T[i][j+1] !== -1) ? T[i][j+1] : solve(i, j+1);
+        T[i][j] = pW2 * r1 + (1-pW2) * r2;
+      }
+    }
+  }
+
+  return T[0][0];
 }
 
-function setWin(gA, gB, aS, ha, hb, pa, pb) {
-  var c = {};
-  function w(a, b, s) {
-    if (a === 7 && b <= 5) return 1;
+// P(A wins set) — iterative, no recursion
+function setWin(gA, gB, aServes0, ha, hb, pa, pb) {
+  // Cache: key = a*1000 + b*10 + srv
+  var cache = {};
+
+  function terminal(a, b) {
     if (a === 7 && b === 6) return 1;
-    if (b === 7 && a <= 5) return 0;
     if (b === 7 && a === 6) return 0;
+    if (a === 7 && b === 5) return 1;
+    if (b === 7 && a === 5) return 0;
     if (a >= 6 && a - b >= 2) return 1;
     if (b >= 6 && b - a >= 2) return 0;
+    return -1; // not terminal
+  }
+
+  function solve(a, b, s) {
+    var t = terminal(a, b);
+    if (t !== -1) return t;
     var k = a * 1000 + b * 10 + (s ? 1 : 0);
-    if (c[k] !== undefined) return c[k];
+    if (cache[k] !== undefined) return cache[k];
     if (a === 6 && b === 6) {
-      c[k] = tbWin(pa, pb, s);
-      return c[k];
+      cache[k] = tbWin(pa, pb, s);
+      return cache[k];
     }
     var pW = s ? ha : (1 - hb);
-    c[k] = pW * w(a+1, b, !s) + (1-pW) * w(a, b+1, !s);
-    return c[k];
+    cache[k] = pW * solve(a+1, b, !s) + (1-pW) * solve(a, b+1, !s);
+    return cache[k];
   }
-  return w(gA, gB, aS);
+
+  // Pre-fill iteratively from end states backwards
+  var a, b, s, k, t, pW;
+  for (a = 7; a >= 0; a--) {
+    for (b = 7; b >= 0; b--) {
+      for (s = 0; s <= 1; s++) {
+        t = terminal(a, b);
+        if (t !== -1) {
+          k = a*1000 + b*10 + s;
+          cache[k] = t;
+        } else if (a === 6 && b === 6) {
+          k = a*1000 + b*10 + s;
+          cache[k] = tbWin(pa, pb, s === 1);
+        }
+      }
+    }
+  }
+
+  // Now fill remaining states backwards
+  for (a = 6; a >= 0; a--) {
+    for (b = 6; b >= 0; b--) {
+      for (s = 0; s <= 1; s++) {
+        k = a*1000 + b*10 + s;
+        if (cache[k] === undefined) {
+          t = terminal(a, b);
+          if (t !== -1) {
+            cache[k] = t;
+          } else {
+            pW = (s === 1) ? ha : (1 - hb);
+            var k1 = (a+1)*1000 + b*10 + (1-s);
+            var k2 = a*1000 + (b+1)*10 + (1-s);
+            var v1 = (cache[k1] !== undefined) ? cache[k1] : solve(a+1, b, s===0);
+            var v2 = (cache[k2] !== undefined) ? cache[k2] : solve(a, b+1, s===0);
+            cache[k] = pW * v1 + (1-pW) * v2;
+          }
+        }
+      }
+    }
+  }
+
+  var startKey = gA*1000 + gB*10 + (aServes0 ? 1 : 0);
+  return cache[startKey] !== undefined ? cache[startKey] : solve(gA, gB, aServes0);
 }
 
 function freshS(ha, hb, pa, pb) {
@@ -304,31 +374,29 @@ function matchWin(sA, sB, gA, gB, aS, ha, hb, pa, pb) {
 }
 
 var BASE = {
-  ATP: { hard: 0.630, clay: 0.580, grass: 0.670 },
-  WTA: { hard: 0.565, clay: 0.525, grass: 0.590 }
+  ATP: { hard:0.630, clay:0.580, grass:0.670 },
+  WTA: { hard:0.565, clay:0.525, grass:0.590 }
 };
 
 function calibrate(base, Pelo) {
   var maxD = Math.min(base - 0.02, 0.98 - base);
   function compute(d) {
-    var pf = base + d;
-    var pu = base - d;
-    var hf = gameProb(pf);
-    var hu = gameProb(pu);
-    var Saf = setWin(0, 0, true,  hf, hu, pf, pu);
-    var Sbf = setWin(0, 0, false, hf, hu, pf, pu);
+    var pf = base + d, pu = base - d;
+    var hf = gameProb(pf), hu = gameProb(pu);
+    var Saf = setWin(0,0,true,  hf,hu,pf,pu);
+    var Sbf = setWin(0,0,false, hf,hu,pf,pu);
     var S = (Saf + Sbf) / 2;
-    return Saf * S * (2-S) + (1-Saf) * S * S;
+    return Saf*S*(2-S) + (1-Saf)*S*S;
   }
-  var lo = 0;
-  var hi = maxD;
-  for (var i = 0; i < 64; i++) {
-    var m = (lo + hi) / 2;
+  var lo = 0, hi = maxD, m;
+  for (var i = 0; i < 60; i++) {
+    m = (lo + hi) / 2;
     if (compute(m) < Pelo) { lo = m; } else { hi = m; }
   }
   return (lo + hi) / 2;
 }
 
+// ── MAIN ─────────────────────────────────────────────────────
 function calc() {
   try {
     var eA = parseFloat(document.getElementById('elo-a').value);
@@ -349,75 +417,60 @@ function calc() {
     }
     errEl.classList.remove('show');
 
-    if (isNaN(eA) || isNaN(eB) || eA < 100 || eB < 100) {
-      return fail('Please enter valid Elo ratings for both players');
-    }
-    if (eA === eB) {
-      return fail('Elo ratings are identical — please enter different values');
-    }
-    if (sA < 0 || sA > 1 || sB < 0 || sB > 1) {
-      return fail('Sets: valid values are 0 or 1 only');
-    }
-    if (gA < 0 || gA > 7 || gB < 0 || gB > 7) {
-      return fail('Games: valid values are 0 to 7');
-    }
+    if (isNaN(eA) || isNaN(eB) || eA < 100 || eB < 100) return fail('Enter valid Elo ratings for both players');
+    if (eA === eB) return fail('Elo ratings are identical');
+    if (sA < 0 || sA > 1 || sB < 0 || sB > 1) return fail('Sets: valid values are 0 or 1');
+    if (gA < 0 || gA > 7 || gB < 0 || gB > 7) return fail('Games: valid values are 0 to 7');
 
     var favIsA = (eA > eB);
-    var eloFav = Math.max(eA, eB);
-    var eloUnd = Math.min(eA, eB);
-    var gap = eloFav - eloUnd;
-    var Pelo = 1 / (1 + Math.pow(10, -gap / 400));
+    var eloFav = Math.max(eA,eB), eloUnd = Math.min(eA,eB);
+    var gap    = eloFav - eloUnd;
+    var Pelo   = 1 / (1 + Math.pow(10, -gap/400));
 
-    var sF = favIsA ? sA : sB;
-    var sU = favIsA ? sB : sA;
-    var gF = favIsA ? gA : gB;
-    var gU = favIsA ? gB : gA;
+    var sF   = favIsA ? sA : sB;
+    var sU   = favIsA ? sB : sA;
+    var gF   = favIsA ? gA : gB;
+    var gU   = favIsA ? gB : gA;
     var favS = favIsA ? aServes : !aServes;
 
-    var base = BASE[tour][surf];
+    var base  = BASE[tour][surf];
     var delta = calibrate(base, Pelo);
-    var pf = base + delta;
-    var pu = base - delta;
-    var hf = gameProb(pf);
-    var hu = gameProb(pu);
+    var pf = base + delta, pu = base - delta;
+    var hf = gameProb(pf),  hu = gameProb(pu);
 
-    var prob = matchWin(sF, sU, gF, gU, favS, hf, hu, pf, pu);
-    var pct = Math.round(prob * 1000) / 10;
-    var prePct = Math.round(Pelo * 1000) / 10;
-    var band = gap < 50 ? 'E0' : gap < 150 ? 'E1' : gap < 300 ? 'E2' : 'E3';
+    var prob   = matchWin(sF, sU, gF, gU, favS, hf, hu, pf, pu);
+    var pct    = Math.round(prob  * 1000) / 10;
+    var prePct = Math.round(Pelo  * 1000) / 10;
+    var band   = gap < 50 ? 'E0' : gap < 150 ? 'E1' : gap < 300 ? 'E2' : 'E3';
 
     var pEl = document.getElementById('r-pct');
-    var cls = 'hi';
-    if (pct < 40) { cls = 'crit'; }
-    else if (pct < 55) { cls = 'lo'; }
-    else if (pct < 70) { cls = 'mid'; }
+    var cls = (pct >= 70) ? 'hi' : (pct >= 55) ? 'mid' : (pct >= 40) ? 'lo' : 'crit';
     pEl.textContent = pct.toFixed(1) + '%';
-    pEl.className = 'result-pct ' + cls;
+    pEl.className   = 'result-pct ' + cls;
 
-    var bc = { E0:'#4d9fff', E1:'#4d9fff', E2:'#00e5a0', E3:'#ffc947' };
+    var bc  = { E0:'#4d9fff', E1:'#4d9fff', E2:'#00e5a0', E3:'#ffc947' };
     var bEl = document.getElementById('r-band');
-    bEl.textContent = band + '  |  Gap: ' + Math.round(gap) + ' pts';
-    bEl.style.color = bc[band];
+    bEl.textContent    = band + '  |  Gap: ' + Math.round(gap) + ' pts';
+    bEl.style.color    = bc[band];
     bEl.style.background = bc[band] + '18';
-    bEl.style.border = '1px solid ' + bc[band] + '44';
+    bEl.style.border   = '1px solid ' + bc[band] + '44';
 
     document.getElementById('r-pre').textContent  = prePct.toFixed(1) + '%';
     document.getElementById('r-gap').textContent  = Math.round(gap);
-    var surfNames = { hard:'Hard', clay:'Clay', grass:'Grass' };
-    document.getElementById('r-surf').textContent = surfNames[surf];
-
-    var whoLabel = favIsA ? 'Player A (Favorite)' : 'Player A (Underdog)';
-    document.getElementById('r-who').textContent = 'Win probability — ' + whoLabel;
+    var sNames = { hard:'Hard', clay:'Clay', grass:'Grass' };
+    document.getElementById('r-surf').textContent = sNames[surf];
+    document.getElementById('r-who').textContent  =
+      'Win probability — ' + (favIsA ? 'Player A (Favorite)' : 'Player A (Underdog)');
 
     var diff = Math.abs(pct - prePct);
-    var note = 'Markov Chain calibrated to Elo | ' + surfNames[surf] + ' baseline';
-    if (diff > 10) { note += ' | ' + diff.toFixed(1) + 'pp shift from pre-match'; }
-    if (pct >= 90) { note += ' | Rare state — check vs market price'; }
+    var note = 'Markov Chain calibrated to Elo | ' + sNames[surf];
+    if (diff > 10) note += ' | ' + diff.toFixed(1) + 'pp shift vs pre-match';
+    if (pct >= 90) note += ' | Rare state — compare to market';
     document.getElementById('r-note').textContent = note;
 
     resEl.classList.add('show');
     setTimeout(function() {
-      resEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      resEl.scrollIntoView({ behavior:'smooth', block:'nearest' });
     }, 50);
 
   } catch(e) {
@@ -427,6 +480,5 @@ function calc() {
 
 setSurf('hard');
 </script>
-
 </body>
 </html>

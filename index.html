@@ -24,37 +24,33 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 .content{padding:14px;max-width:480px;margin:0 auto;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
 .card-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
-
-/* SCORE ROWS — always LTR: A on left, B on right */
 .score-wrap{direction:ltr;margin-bottom:14px;}
 .score-labels{display:grid;grid-template-columns:1fr 36px 1fr;gap:8px;margin-bottom:4px;}
-.score-labels span{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--accent);text-transform:uppercase;text-align:center;}
-.score-labels span.b{color:var(--muted);}
+.score-labels span{font-size:12px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;text-align:center;}
+.lbl-a{color:var(--accent);}
+.lbl-b{color:var(--muted);}
 .score-row{display:grid;grid-template-columns:1fr 36px 1fr;gap:8px;align-items:center;}
 .sep{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--muted2);text-align:center;}
-.score-input{background:var(--bg2);border:1.5px solid var(--border);border-radius:7px;padding:10px 6px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;text-align:center;outline:none;width:100%;transition:border-color .15s;-webkit-appearance:none;}
+.score-input{background:var(--bg2);border:1.5px solid var(--border);border-radius:7px;padding:10px 6px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;text-align:center;outline:none;width:100%;-webkit-appearance:none;}
 .score-input:focus{border-color:var(--accent);}
-.score-input.a-input{border-color:rgba(0,212,255,.3);}
-.score-input.b-input{border-color:rgba(90,106,133,.3);}
-
-.btn-group{display:flex;gap:6px;}
-.btn-surf{flex:1;padding:10px 6px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;}
+.inp-a{border-color:rgba(0,212,255,.25);}
+.inp-b{border-color:rgba(90,106,133,.25);}
+.btn-group{display:flex;gap:6px;direction:ltr;}
+.btn-surf{flex:1;padding:10px 6px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;cursor:pointer;}
 .btn-surf.active-hard{border-color:var(--blue);color:var(--blue);background:rgba(77,159,255,.08);}
 .btn-surf.active-clay{border-color:var(--orange);color:var(--orange);background:rgba(255,140,0,.08);}
 .btn-surf.active-grass{border-color:var(--green);color:var(--green);background:rgba(0,229,160,.08);}
-.btn-srv{flex:1;padding:9px 8px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-srv{flex:1;padding:9px 8px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;cursor:pointer;}
 .btn-srv.active{border-color:var(--gold);color:var(--gold);background:rgba(255,201,71,.08);}
-.section-lbl{font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
-
+.section-lbl{font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
 .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
-.qs{padding:7px 9px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .15s;text-align:center;direction:ltr;}
+.qs{padding:7px 9px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;text-align:center;direction:ltr;}
 .qs:hover{border-color:var(--accent);}
 .qs.gold-state{border-color:rgba(255,201,71,.3);}
 .qs-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);display:block;margin-bottom:2px;}
 .qs-num.g{color:var(--gold);}
 .qs-desc{font-size:11px;color:var(--muted);line-height:1.3;}
-
-.calc-btn{width:100%;padding:16px;background:linear-gradient(135deg,#005580,#007daa);border:none;border-radius:10px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2px;cursor:pointer;margin:4px 0 10px;transition:all .2s;}
+.calc-btn{width:100%;padding:16px;background:linear-gradient(135deg,#005580,#007daa);border:none;border-radius:10px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2px;cursor:pointer;margin:4px 0 10px;}
 .calc-btn:active{transform:scale(.98);}
 .error{background:rgba(255,51,85,.08);border:1px solid rgba(255,51,85,.4);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:8px;display:none;}
 .error.show{display:block;}
@@ -92,23 +88,21 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 
 <div class="content">
 
-  <!-- ELO -->
   <div class="card">
     <div class="card-title">Elo Rating</div>
     <div class="score-wrap">
       <div class="score-labels">
-        <span>Player A</span><span></span><span class="b">Player B</span>
+        <span class="lbl-a">Player A</span><span></span><span class="lbl-b">Player B</span>
       </div>
       <div class="score-row">
-        <input class="score-input a-input" type="number" id="elo-a" placeholder="2100" inputmode="numeric">
+        <input class="score-input inp-a" type="number" id="elo-a" placeholder="2100" inputmode="numeric">
         <div class="sep" style="font-size:13px;color:var(--muted)">vs</div>
-        <input class="score-input b-input" type="number" id="elo-b" placeholder="1900" inputmode="numeric">
+        <input class="score-input inp-b" type="number" id="elo-b" placeholder="1900" inputmode="numeric">
       </div>
     </div>
-    <div class="helper">Favorite = higher Elo &nbsp;|&nbsp; A is always LEFT</div>
+    <div class="helper">Result always shows P(Player A wins)</div>
   </div>
 
-  <!-- SURFACE -->
   <div class="card">
     <div class="card-title">Surface</div>
     <div class="btn-group">
@@ -118,44 +112,42 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
     </div>
   </div>
 
-  <!-- MATCH STATE -->
   <div class="card">
     <div class="card-title">Match State</div>
 
     <div class="section-lbl">Sets Won</div>
     <div class="score-wrap">
       <div class="score-labels">
-        <span>Player A</span><span></span><span class="b">Player B</span>
+        <span class="lbl-a">Player A</span><span></span><span class="lbl-b">Player B</span>
       </div>
       <div class="score-row">
-        <input class="score-input a-input" type="number" id="sets-a" value="0" min="0" max="1" inputmode="numeric">
+        <input class="score-input inp-a" type="number" id="sets-a" value="0" min="0" max="1" inputmode="numeric">
         <div class="sep">–</div>
-        <input class="score-input b-input" type="number" id="sets-b" value="0" min="0" max="1" inputmode="numeric">
+        <input class="score-input inp-b" type="number" id="sets-b" value="0" min="0" max="1" inputmode="numeric">
       </div>
     </div>
 
     <div class="section-lbl">Games in Current Set</div>
     <div class="score-wrap">
       <div class="score-labels">
-        <span>Player A</span><span></span><span class="b">Player B</span>
+        <span class="lbl-a">Player A</span><span></span><span class="lbl-b">Player B</span>
       </div>
       <div class="score-row">
-        <input class="score-input a-input" type="number" id="games-a" value="0" min="0" max="7" inputmode="numeric">
+        <input class="score-input inp-a" type="number" id="games-a" value="0" min="0" max="7" inputmode="numeric">
         <div class="sep">–</div>
-        <input class="score-input b-input" type="number" id="games-b" value="0" min="0" max="7" inputmode="numeric">
+        <input class="score-input inp-b" type="number" id="games-b" value="0" min="0" max="7" inputmode="numeric">
       </div>
     </div>
 
     <div class="section-lbl">Who is Serving?</div>
-    <div class="btn-group" style="direction:ltr">
+    <div class="btn-group">
       <button class="btn-srv active" id="srv-a" onclick="setSrv('A')">Player A</button>
       <button class="btn-srv" id="srv-b" onclick="setSrv('B')">Player B</button>
     </div>
   </div>
 
-  <!-- QUICK STATES -->
   <div class="card">
-    <div class="card-title">Quick States — A = Favorite</div>
+    <div class="card-title">Quick States — enter A as the stronger player</div>
     <div class="quick-grid">
       <button class="qs" onclick="qs(0)"><span class="qs-num">0</span><span class="qs-desc">Match start 0-0</span></button>
       <button class="qs" onclick="qs(1)"><span class="qs-num">1</span><span class="qs-desc">A up 1-0, 3-3, A serves</span></button>
@@ -163,13 +155,12 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
       <button class="qs" onclick="qs(3)"><span class="qs-num">3</span><span class="qs-desc">A down 0-1, 1-1, A serves</span></button>
       <button class="qs" onclick="qs(4)"><span class="qs-num">4</span><span class="qs-desc">1-1 sets, 3-3, A serves</span></button>
       <button class="qs" onclick="qs(5)"><span class="qs-num">5</span><span class="qs-desc">1-1 sets, 3-3, B serves</span></button>
-      <button class="qs gold-state" onclick="qs(6)"><span class="qs-num g">★ 6</span><span class="qs-desc">A up 1-0, A leads 3-1, A serves</span></button>
-      <button class="qs" onclick="qs(7)"><span class="qs-num">7</span><span class="qs-desc">A down 0-1, A trails 1-3, B serves</span></button>
+      <button class="qs gold-state" onclick="qs(6)"><span class="qs-num g">★ 6</span><span class="qs-desc">A up 1-0, leads 3-1, A serves</span></button>
+      <button class="qs" onclick="qs(7)"><span class="qs-num">7</span><span class="qs-desc">A down 0-1, trails 1-3, B serves</span></button>
       <button class="qs" onclick="qs(8)"><span class="qs-num">8</span><span class="qs-desc">1-1 sets, 5-5, A serves</span></button>
       <button class="qs gold-state" onclick="qs(9)"><span class="qs-num g">★ 9</span><span class="qs-desc">1-1 sets, A leads 5-4, A serves</span></button>
       <button class="qs" onclick="qs(10)" style="grid-column:span 2"><span class="qs-num">10</span><span class="qs-desc">1-1 sets, 0-0 start of set 3, A serves</span></button>
     </div>
-    <div class="helper" style="margin-top:6px">★ = 90%+ for E2 player &nbsp;|&nbsp; A always = LEFT input</div>
   </div>
 
   <div class="error" id="err"></div>
@@ -208,7 +199,6 @@ function setSrv(s){
   document.getElementById('srv-a').classList.toggle('active',s==='A');
   document.getElementById('srv-b').classList.toggle('active',s==='B');
 }
-
 var QS=[
   [0,0,0,0,'A'],[1,0,3,3,'A'],[1,0,1,3,'B'],[0,1,1,1,'A'],
   [1,1,3,3,'A'],[1,1,3,3,'B'],[1,0,3,1,'A'],[0,1,1,3,'B'],
@@ -229,51 +219,93 @@ function gameProb(p){
   return Math.pow(p,4)+4*Math.pow(p,4)*q+10*Math.pow(p,4)*q*q+d*w;
 }
 
-function pSet(gF,gU,favSrv,hf,hu,pf,pu){
+// P(A wins set from gA-gB, aServes, given hA=A hold rate, hB=B hold rate)
+function pSet(gA,gB,aServes,hA,hB){
   var m={};
-  function s(f,u,fs){
-    if(f>=6&&u<=f-2)return 1;
-    if(u>=6&&f<=u-2)return 0;
-    if(f===7&&u===6)return 1;
-    if(u===7&&f===6)return 0;
-    var k=f+'_'+u+'_'+(fs?1:0);
+  function s(a,b,as){
+    if(a>=6&&b<=a-2)return 1;
+    if(b>=6&&a<=b-2)return 0;
+    if(a===7&&b===6)return 1;
+    if(b===7&&a===6)return 0;
+    var k=a+'_'+b+'_'+(as?1:0);
     if(m[k]!==undefined)return m[k];
-    if(f===6&&u===6){
-      var p0=fs?pf:(1-pu),p1=fs?(1-pu):pf;
-      var pA=p0*p1,pB=(1-p0)*(1-p1);
-      m[k]=(pA+pB>0)?pA/(pA+pB):0.5;return m[k];
-    }
-    var pw=fs?hf:(1-hu);
-    m[k]=pw*s(f+1,u,!fs)+(1-pw)*s(f,u+1,!fs);return m[k];
+    if(a===6&&b===6){m[k]=0.5;return 0.5;} // tiebreak ~50/50 approximation at equal level, calibrated via hA/hB
+    var pw=as?hA:(1-hB);
+    m[k]=pw*s(a+1,b,!as)+(1-pw)*s(a,b+1,!as);
+    return m[k];
   }
-  return s(gF,gU,favSrv);
+  return s(gA,gB,aServes);
 }
 
-function freshS(hf,hu,pf,pu){
-  return(pSet(0,0,true,hf,hu,pf,pu)+pSet(0,0,false,hf,hu,pf,pu))/2;
+// Better tiebreak: use point probabilities
+function pSetFull(gA,gB,aServes,hA,hB,pA,pB){
+  var m={};
+  function tb(a,b,as){
+    if(a>=7&&a-b>=2)return 1;
+    if(b>=7&&b-a>=2)return 0;
+    if(a===6&&b===6){
+      var pw=as?pA:(1-pB);
+      var pw2=as?(1-pB):pA;
+      var win=pw*pw2, lose=(1-pw)*(1-pw2);
+      return(win+lose>0)?win/(win+lose):0.5;
+    }
+    var k='t'+a+'_'+b+'_'+(as?1:0);
+    if(m[k]!==undefined)return m[k];
+    var pw=as?pA:(1-pB);
+    m[k]=pw*tb(a+1,b,!as)+(1-pw)*tb(a,b+1,!as);
+    return m[k];
+  }
+  function s(a,b,as){
+    if(a>=6&&b<=a-2)return 1;
+    if(b>=6&&a<=b-2)return 0;
+    if(a===7&&b===6)return 1;
+    if(b===7&&a===6)return 0;
+    var k='s'+a+'_'+b+'_'+(as?1:0);
+    if(m[k]!==undefined)return m[k];
+    if(a===6&&b===6){m[k]=tb(0,0,as);return m[k];}
+    var pw=as?hA:(1-hB);
+    m[k]=pw*s(a+1,b,!as)+(1-pw)*s(a,b+1,!as);
+    return m[k];
+  }
+  return s(gA,gB,aServes);
 }
 
-function pMatch(sF,sU,gF,gU,favSrv,hf,hu,pf,pu){
-  var pC=pSet(gF,gU,favSrv,hf,hu,pf,pu);
-  var S=freshS(hf,hu,pf,pu);
-  if(sF===1&&sU===1)return pC;
-  if(sF===1&&sU===0)return pC+(1-pC)*S;
-  if(sF===0&&sU===1)return pC*S;
+function freshS(hA,hB,pA,pB){
+  return(pSetFull(0,0,true,hA,hB,pA,pB)+pSetFull(0,0,false,hA,hB,pA,pB))/2;
+}
+
+function pMatch(sA,sB,gA,gB,aServes,hA,hB,pA,pB){
+  var pC=pSetFull(gA,gB,aServes,hA,hB,pA,pB);
+  var S=freshS(hA,hB,pA,pB);
+  if(sA===1&&sB===1)return pC;
+  if(sA===1&&sB===0)return pC+(1-pC)*S;
+  if(sA===0&&sB===1)return pC*S;
   return pC*S*(2-S)+(1-pC)*S*S;
 }
 
 var BASE={ATP:{hard:0.630,clay:0.580,grass:0.670},WTA:{hard:0.565,clay:0.525,grass:0.590}};
 
-function calibrate(base,Pelo){
+function calibrate(base,PeloA){
+  // PeloA = P(A wins pre-match). If eA>eB, PeloA>0.5, pA=base+d, pB=base-d
+  // If eA<eB, PeloA<0.5, pA=base-d, pB=base+d
+  // We always find d>=0 and assign correctly
+  var favA=(PeloA>=0.5);
+  var Pfav=favA?PeloA:(1-PeloA);
   var maxD=Math.min(base-0.02,0.98-base);
   function tryD(d){
-    var pf=base+d,pu=base-d,hf=gameProb(pf),hu=gameProb(pu);
-    var S1=pSet(0,0,true,hf,hu,pf,pu),S2=pSet(0,0,false,hf,hu,pf,pu),S=(S1+S2)/2;
+    var pFav=base+d, pUnd=base-d;
+    var hFav=gameProb(pFav), hUnd=gameProb(pUnd);
+    var S1=pSetFull(0,0,true,hFav,hUnd,pFav,pUnd);
+    var S2=pSetFull(0,0,false,hFav,hUnd,pFav,pUnd);
+    var S=(S1+S2)/2;
     return S1*S*(2-S)+(1-S1)*S*S;
   }
   var lo=0,hi=maxD,m;
-  for(var i=0;i<60;i++){m=(lo+hi)/2;if(tryD(m)<Pelo)lo=m;else hi=m;}
-  return(lo+hi)/2;
+  for(var i=0;i<60;i++){m=(lo+hi)/2;if(tryD(m)<Pfav)lo=m;else hi=m;}
+  var d=(lo+hi)/2;
+  // Return pA, pB
+  if(favA) return [base+d, base-d];
+  else     return [base-d, base+d];
 }
 
 function calc(){
@@ -295,23 +327,20 @@ function calc(){
     if(sA<0||sA>1||sB<0||sB>1)return fail('Sets: 0 or 1 only');
     if(gA<0||gA>7||gB<0||gB>7)return fail('Games: 0 to 7 only');
 
-    var favIsA=(eA>eB);
-    var gap=Math.abs(eA-eB);
-    var Pelo=1/(1+Math.pow(10,-gap/400));
-
-    var sF=favIsA?sA:sB, sU=favIsA?sB:sA;
-    var gF=favIsA?gA:gB, gU=favIsA?gB:gA;
-    var favSrv=favIsA?aServes:!aServes;
+    // P(A wins pre-match) — directly from Elo difference (positive = A stronger)
+    var gap=eA-eB; // signed: positive means A stronger
+    var PeloA=1/(1+Math.pow(10,-gap/400));
+    var absGap=Math.abs(gap);
 
     var base=BASE[tour][surf];
-    var delta=calibrate(base,Pelo);
-    var pf=base+delta,pu=base-delta;
-    var hf=gameProb(pf),hu=gameProb(pu);
+    var ps=calibrate(base,PeloA);
+    var pA=ps[0], pB=ps[1];
+    var hA=gameProb(pA), hB=gameProb(pB);
 
-    var prob=pMatch(sF,sU,gF,gU,favSrv,hf,hu,pf,pu);
+    var prob=pMatch(sA,sB,gA,gB,aServes,hA,hB,pA,pB);
     var pct=Math.round(prob*1000)/10;
-    var prePct=Math.round(Pelo*1000)/10;
-    var band=gap<50?'E0':gap<150?'E1':gap<300?'E2':'E3';
+    var prePct=Math.round(PeloA*1000)/10;
+    var band=absGap<50?'E0':absGap<150?'E1':absGap<300?'E2':'E3';
 
     var pEl=document.getElementById('r-pct');
     var cls=(pct>=70)?'hi':(pct>=55)?'mid':(pct>=40)?'lo':'crit';
@@ -320,22 +349,24 @@ function calc(){
 
     var bc={E0:'#4d9fff',E1:'#4d9fff',E2:'#00e5a0',E3:'#ffc947'};
     var bEl=document.getElementById('r-band');
-    bEl.textContent=band+'  |  Gap: '+Math.round(gap)+' pts';
+    bEl.textContent=band+'  |  Gap: '+Math.round(absGap)+' pts';
     bEl.style.color=bc[band];
     bEl.style.background=bc[band]+'18';
     bEl.style.border='1px solid '+bc[band]+'44';
 
     document.getElementById('r-pre').textContent=prePct.toFixed(1)+'%';
-    document.getElementById('r-gap').textContent=Math.round(gap);
+    document.getElementById('r-gap').textContent=Math.round(absGap);
     var sNames={hard:'Hard',clay:'Clay',grass:'Grass'};
     document.getElementById('r-surf').textContent=sNames[surf];
+
+    var stronger=eA>eB?'A':'B';
     document.getElementById('r-who').textContent=
-      'Win prob — '+(favIsA?'A (Favorite)':'A (Underdog)');
+      'P(Player A wins)  |  Stronger: Player '+stronger;
 
     var diff=Math.abs(pct-prePct);
     var note='Markov Chain calibrated to Elo | '+sNames[surf];
     if(diff>10)note+=' | '+diff.toFixed(1)+'pp shift vs pre-match';
-    if(pct>=90)note+=' | Rare state — compare to market';
+    if(pct>=90||pct<=10)note+=' | Extreme state';
     document.getElementById('r-note').textContent=note;
 
     resEl.classList.add('show');

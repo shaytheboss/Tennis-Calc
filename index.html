@@ -72,9 +72,7 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 <div class="header">
   <div class="header-top">
     <span class="header-icon">🎾</span>
-    <div>
-      <div class="header-title">TENNIS Bo3 CALCULATOR</div>
-    </div>
+    <div><div class="header-title">TENNIS Bo3 CALCULATOR</div></div>
   </div>
   <div class="header-sub">MARKOV CHAIN · ELO-CALIBRATED · HARD / CLAY / GRASS</div>
 </div>
@@ -85,18 +83,11 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 </div>
 
 <div class="content">
-
   <div class="card">
     <div class="card-title">Elo Rating</div>
     <div class="row2">
-      <div class="field">
-        <label>Player A</label>
-        <input type="number" id="elo-a" placeholder="2100" inputmode="numeric">
-      </div>
-      <div class="field">
-        <label>Player B</label>
-        <input type="number" id="elo-b" placeholder="1900" inputmode="numeric">
-      </div>
+      <div class="field"><label>Player A</label><input type="number" id="elo-a" placeholder="2100" inputmode="numeric"></div>
+      <div class="field"><label>Player B</label><input type="number" id="elo-b" placeholder="1900" inputmode="numeric"></div>
     </div>
     <div class="helper">Favorite = higher Elo (regardless of A/B)</div>
   </div>
@@ -159,7 +150,7 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 
   <div class="result" id="result">
     <div class="result-who" id="r-who"></div>
-    <div class="result-pct hi" id="r-pct">-</div>
+    <div class="result-pct" id="r-pct">-</div>
     <div class="result-band" id="r-band">-</div>
     <div class="result-grid">
       <div class="result-cell"><div class="result-cell-val" id="r-pre">-</div><div class="result-cell-key">Pre-match</div></div>
@@ -168,209 +159,154 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
     </div>
     <div class="result-note" id="r-note"></div>
   </div>
-
   <div style="height:30px"></div>
 </div>
 
 <script>
-var tour = 'ATP';
-var surf = 'hard';
-var srv  = 'A';
+var tour = 'ATP', surf = 'hard', srv = 'A';
 
 function setTour(t) {
   tour = t;
-  document.getElementById('tab-atp').classList.toggle('active', t === 'ATP');
-  document.getElementById('tab-wta').classList.toggle('active', t === 'WTA');
+  document.getElementById('tab-atp').classList.toggle('active', t==='ATP');
+  document.getElementById('tab-wta').classList.toggle('active', t==='WTA');
 }
 function setSurf(s) {
   surf = s;
   var list = ['hard','clay','grass'];
-  for (var i = 0; i < list.length; i++) {
-    document.getElementById('sf-'+list[i]).className =
-      'btn-surf' + (list[i] === s ? ' active-'+s : '');
-  }
+  for (var i=0; i<list.length; i++)
+    document.getElementById('sf-'+list[i]).className = 'btn-surf'+(list[i]===s?' active-'+s:'');
 }
 function setSrv(s) {
   srv = s;
-  document.getElementById('srv-a').classList.toggle('active', s === 'A');
-  document.getElementById('srv-b').classList.toggle('active', s === 'B');
+  document.getElementById('srv-a').classList.toggle('active', s==='A');
+  document.getElementById('srv-b').classList.toggle('active', s==='B');
 }
-var QS = [
+var QS=[
   [0,0,0,0,'A'],[1,0,3,3,'A'],[1,0,1,3,'B'],[0,1,1,1,'A'],
   [1,1,3,3,'A'],[1,1,3,3,'B'],[1,0,3,1,'A'],[0,1,1,3,'B'],
   [1,1,5,5,'A'],[1,1,5,4,'A'],[1,1,0,0,'A']
 ];
 function qs(n) {
-  var q = QS[n];
-  document.getElementById('sets-a').value  = q[0];
-  document.getElementById('sets-b').value  = q[1];
-  document.getElementById('games-a').value = q[2];
-  document.getElementById('games-b').value = q[3];
+  var q=QS[n];
+  document.getElementById('sets-a').value=q[0];
+  document.getElementById('sets-b').value=q[1];
+  document.getElementById('games-a').value=q[2];
+  document.getElementById('games-b').value=q[3];
   setSrv(q[4]);
 }
 
-// ── MATH ─────────────────────────────────────────────────────
+// ── MATH ──────────────────────────────────────────────────
+// All functions take:
+//   pf = P(favorite wins a serve point on their own serve)
+//   pu = P(underdog wins a serve point on their own serve)
+//   hf = P(favorite holds serve) = gameProb(pf)
+//   hu = P(underdog holds serve) = gameProb(pu)
+// favServes = true means the FAVORITE is currently serving
 
 function gameProb(p) {
-  if (p <= 0) return 0;
-  if (p >= 1) return 1;
-  var q = 1 - p;
-  var deuce = 20 * Math.pow(p*q, 3);
-  var wD = p*p / (p*p + q*q);
-  return Math.pow(p,4) + 4*Math.pow(p,4)*q + 10*Math.pow(p,4)*q*q + deuce*wD;
+  if (p<=0) return 0; if (p>=1) return 1;
+  var q=1-p, d=20*Math.pow(p*q,3), w=p*p/(p*p+q*q);
+  return Math.pow(p,4)+4*Math.pow(p,4)*q+10*Math.pow(p,4)*q*q+d*w;
 }
 
-// Tiebreak: who serves first in a block of 2 (first point solo)
-// Point total 0 -> aFirst serves. Then alternate every 2.
-function tbServes(tot, aFirst) {
-  if (tot === 0) return aFirst;
-  // after point 0, blocks of 2: points 1-2, 3-4, 5-6 ...
-  var block = Math.ceil(tot / 2); // which block (1-indexed)
-  return aFirst ? (block % 2 === 0) : (block % 2 !== 0);
-}
-
-// P(A wins tiebreak from 0-0)
-// Uses closed-form for deuce states, iteration for the rest
-function calcTB(pa, pb, aFirst) {
-  // pWin[ta][tb] = P(A wins TB | score ta-tb)
-  // We need states 0..7 x 0..7, plus deuce (6-6+)
-  // At 6-6: deuce. P(A wins from deuce) = pa_d^2 / (pa_d^2 + pb_d^2)
-  // where pa_d = P(A wins point at deuce) = tbServes(12, aFirst) ? pa : (1-pb)
-  // Actually deuce serves alternate starting from whoever serves at 6-6 total=12
-  // But in real tiebreak deuce (6-6), they keep alternating every 2 points
-  // Simple: at 6-6, A serves point 12 if tbServes(12,aFirst)
-  // P(A wins from deuce) with server s:
-  //   pW = s==A ? pa : (1-pb)
-  //   = pW*pW / (pW*pW + (1-pW)*(1-pW)) -- no, server changes after 2 points
-  // Keep it simple: at 6-6, compute recursively up to 8-8, then use infinite series
-
-  // Build table using plain object, fill from high scores to low
-  var T = {};
-
-  function key(a,b) { return a*100+b; }
-
-  function getT(a,b) {
-    // Terminal
-    if (a >= 7 && a-b >= 2) return 1;
-    if (b >= 7 && b-a >= 2) return 0;
-    var v = T[key(a,b)];
-    return (v === undefined) ? 0.5 : v;
-  }
-
-  // Fill from a=7 down to 0, b=7 down to 0
-  var a, b, tot, aS, pW;
-  for (a = 7; a >= 0; a--) {
-    for (b = 7; b >= 0; b--) {
-      // Skip already-terminal
-      if (a >= 7 && a-b >= 2) continue;
-      if (b >= 7 && b-a >= 2) continue;
-
-      if (a === 6 && b === 6) {
-        // Deuce in tiebreak: compute via geometric series
-        // At 6-6, total points played = 12. Server = tbServes(12, aFirst)
-        // Two points then switch. Let p1 = P(A wins point 12), p2 = P(A wins point 13)
-        var s0 = tbServes(12, aFirst);
-        var s1 = tbServes(13, aFirst);
-        var p1 = s0 ? pa : (1-pb);
-        var p2 = s1 ? pa : (1-pb);
-        // P(A wins mini-game of 2 points) = p1*p2
-        // P(B wins mini-game) = (1-p1)*(1-p2)
-        // P(deuce again) = p1*(1-p2) + (1-p1)*p2
-        // But next deuce same two servers (points 14,15 same pattern as 12,13)
-        var pA2 = p1 * p2;
-        var pB2 = (1-p1) * (1-p2);
-        var pD2 = 1 - pA2 - pB2;
-        // P(A wins from deuce) = pA2 / (pA2 + pB2)  [geometric series]
-        T[key(6,6)] = (pA2 + pB2 > 0) ? pA2 / (pA2 + pB2) : 0.5;
-        continue;
-      }
-
-      tot = a + b;
-      aS  = tbServes(tot, aFirst);
-      pW  = aS ? pa : (1-pb);
-      T[key(a,b)] = pW * getT(a+1,b) + (1-pW) * getT(a,b+1);
+// P(favorite wins tiebreak | favServes = true/false for first point)
+function pTB(hf, hu, pf, pu, favServes) {
+  // At each point, who serves rotates: first 1 point, then every 2
+  // favServes refers to who serves point 0
+  // Use memoization with string keys
+  var memo = {};
+  function solve(fa, ua, fServes) {
+    // fa = favorite's points, ua = underdog's points
+    if (fa>=7 && fa-ua>=2) return 1;
+    if (ua>=7 && ua-fa>=2) return 0;
+    var k = fa+'_'+ua+'_'+(fServes?1:0);
+    if (memo[k] !== undefined) return memo[k];
+    // At 6-6: use geometric series (same serve pattern repeats every 2 points)
+    if (fa===6 && ua===6) {
+      // point 12: fServes? then point 13 flips
+      var p0 = fServes ? pf : (1-pu);
+      // next point served by other
+      var p1 = fServes ? (1-pu) : pf;
+      var pFavWin2 = p0*p1;           // fav wins both
+      var pUndWin2 = (1-p0)*(1-p1);  // und wins both
+      var pDenom = pFavWin2 + pUndWin2;
+      memo[k] = pDenom > 0 ? pFavWin2/pDenom : 0.5;
+      return memo[k];
     }
-  }
-
-  return getT(0,0);
-}
-
-// P(A wins set from gA-gB, aServesFirst)
-function calcSet(gA, gB, aServesFirst, ha, hb, pa, pb) {
-  var T = {};
-
-  function key(a,b,s) { return a*1000 + b*10 + s; }
-
-  function getT(a,b,s) {
-    // Terminal states
-    if (a >= 6 && b <= a-2 && !(a===6&&b===6)) return 1;
-    if (b >= 6 && a <= b-2 && !(a===6&&b===6)) return 0;
-    if (a === 7 && b === 6) return 1;
-    if (b === 7 && a === 6) return 0;
-    var v = T[key(a,b,s)];
-    return (v === undefined) ? 0.5 : v;
-  }
-
-  var a, b, s, pW;
-  for (a = 7; a >= 0; a--) {
-    for (b = 7; b >= 0; b--) {
-      for (s = 0; s <= 1; s++) {
-        // Check terminal
-        if (a >= 6 && b <= a-2 && !(a===6&&b===6)) continue;
-        if (b >= 6 && a <= b-2 && !(a===6&&b===6)) continue;
-        if (a === 7 && b === 6) continue;
-        if (b === 7 && a === 6) continue;
-
-        if (a === 6 && b === 6) {
-          T[key(a,b,s)] = calcTB(pa, pb, s === 1);
-          continue;
-        }
-
-        pW = (s === 1) ? ha : (1-hb);
-        T[key(a,b,s)] = pW * getT(a+1, b, 1-s) + (1-pW) * getT(a, b+1, 1-s);
-      }
+    // Who serves next point?
+    var tot = fa+ua;
+    var curFav;
+    if (tot===0) curFav = favServes;
+    else {
+      // point 0: favServes, then every 2 alternates
+      var flips = Math.floor((tot+1)/2); // number of service switches after point 0
+      curFav = (flips%2===0) ? favServes : !favServes;
     }
+    var pw = curFav ? pf : (1-pu); // P(favorite wins this point)
+    memo[k] = pw*solve(fa+1,ua,favServes) + (1-pw)*solve(fa,ua+1,favServes);
+    return memo[k];
   }
-
-  return getT(gA, gB, aServesFirst ? 1 : 0);
+  return solve(0,0,favServes);
 }
 
-function freshSet(ha, hb, pa, pb) {
-  return (calcSet(0,0,true,ha,hb,pa,pb) + calcSet(0,0,false,ha,hb,pa,pb)) / 2;
+// P(favorite wins set | gF-gU games, favServes = true/false)
+function pSet(gF, gU, favServes, hf, hu, pf, pu) {
+  var memo = {};
+  function solve(f, u, fs) {
+    // Terminal: won set
+    if (f>=6 && u<=f-2) return 1;
+    if (u>=6 && f<=u-2) return 0;
+    if (f===7 && u===6) return 1;
+    if (u===7 && f===6) return 0;
+    var k = f+'_'+u+'_'+(fs?1:0);
+    if (memo[k] !== undefined) return memo[k];
+    if (f===6 && u===6) {
+      memo[k] = pTB(hf, hu, pf, pu, fs);
+      return memo[k];
+    }
+    var pw = fs ? hf : (1-hu); // P(favorite wins this game)
+    memo[k] = pw*solve(f+1,u,!fs) + (1-pw)*solve(f,u+1,!fs);
+    return memo[k];
+  }
+  return solve(gF, gU, favServes);
 }
 
-function matchProb(sA, sB, gA, gB, aS, ha, hb, pa, pb) {
-  var pCur = calcSet(gA, gB, aS, ha, hb, pa, pb);
-  var S    = freshSet(ha, hb, pa, pb);
-  if (sA===1 && sB===1) return pCur;
-  if (sA===1 && sB===0) return pCur + (1-pCur)*S;
-  if (sA===0 && sB===1) return pCur * S;
+// Average fresh set (average of fav serving first vs not)
+function pFreshSet(hf, hu, pf, pu) {
+  return (pSet(0,0,true,hf,hu,pf,pu) + pSet(0,0,false,hf,hu,pf,pu)) / 2;
+}
+
+// P(favorite wins match | current state)
+function pMatch(sF, sU, gF, gU, favServes, hf, hu, pf, pu) {
+  var pCur = pSet(gF, gU, favServes, hf, hu, pf, pu);
+  var S    = pFreshSet(hf, hu, pf, pu);
+  if (sF===1 && sU===1) return pCur;            // deciding set
+  if (sF===1 && sU===0) return pCur+(1-pCur)*S; // fav leads
+  if (sF===0 && sU===1) return pCur*S;           // fav trails
+  // 0-0
   return pCur*S*(2-S) + (1-pCur)*S*S;
 }
 
+// Calibrate: find delta so pMatch(0-0) = Pelo
 var BASE = {
-  ATP: { hard:0.630, clay:0.580, grass:0.670 },
-  WTA: { hard:0.565, clay:0.525, grass:0.590 }
+  ATP:{hard:0.630,clay:0.580,grass:0.670},
+  WTA:{hard:0.565,clay:0.525,grass:0.590}
 };
-
 function calibrate(base, Pelo) {
   var maxD = Math.min(base-0.02, 0.98-base);
   function tryD(d) {
     var pf=base+d, pu=base-d;
     var hf=gameProb(pf), hu=gameProb(pu);
-    var S1=calcSet(0,0,true,hf,hu,pf,pu);
-    var S2=calcSet(0,0,false,hf,hu,pf,pu);
+    var S1=pSet(0,0,true,hf,hu,pf,pu), S2=pSet(0,0,false,hf,hu,pf,pu);
     var S=(S1+S2)/2;
     return S1*S*(2-S)+(1-S1)*S*S;
   }
   var lo=0, hi=maxD, m;
-  for (var i=0; i<60; i++) {
-    m=(lo+hi)/2;
-    if (tryD(m) < Pelo) lo=m; else hi=m;
-  }
+  for (var i=0; i<60; i++) { m=(lo+hi)/2; if(tryD(m)<Pelo) lo=m; else hi=m; }
   return (lo+hi)/2;
 }
 
+// ── MAIN ──────────────────────────────────────────────────
 function calc() {
   try {
     var eA=parseFloat(document.getElementById('elo-a').value);
@@ -381,34 +317,38 @@ function calc() {
     var gB=parseInt(document.getElementById('games-b').value)||0;
     var aServes=(srv==='A');
 
-    var errEl=document.getElementById('err');
-    var resEl=document.getElementById('result');
+    var errEl=document.getElementById('err'), resEl=document.getElementById('result');
     function fail(msg){errEl.textContent=msg;errEl.classList.add('show');resEl.classList.remove('show');}
     errEl.classList.remove('show');
 
     if (isNaN(eA)||isNaN(eB)||eA<100||eB<100) return fail('Enter valid Elo ratings');
-    if (eA===eB) return fail('Elo ratings are identical');
+    if (eA===eB) return fail('Elo ratings must be different');
     if (sA<0||sA>1||sB<0||sB>1) return fail('Sets: 0 or 1 only');
     if (gA<0||gA>7||gB<0||gB>7) return fail('Games: 0 to 7 only');
 
-    var favIsA=(eA>eB);
-    var gap=Math.abs(eA-eB);
-    var Pelo=1/(1+Math.pow(10,-gap/400));
+    // Determine favorite
+    var favIsA = (eA>eB);
+    var gap    = Math.abs(eA-eB);
+    var Pelo   = 1/(1+Math.pow(10,-gap/400)); // P(fav wins pre-match)
 
-    var sF=favIsA?sA:sB, sU=favIsA?sB:sA;
-    var gF=favIsA?gA:gB, gU=favIsA?gB:gA;
-    var favS=favIsA?aServes:!aServes;
+    // Remap to fav/und perspective
+    var sF = favIsA?sA:sB,  sU = favIsA?sB:sA;
+    var gF = favIsA?gA:gB,  gU = favIsA?gB:gA;
+    var favServes = favIsA ? aServes : !aServes;
 
-    var base=BASE[tour][surf];
-    var delta=calibrate(base,Pelo);
+    // Calibrate serve probabilities
+    var base  = BASE[tour][surf];
+    var delta = calibrate(base, Pelo);
     var pf=base+delta, pu=base-delta;
     var hf=gameProb(pf), hu=gameProb(pu);
 
-    var prob=matchProb(sF,sU,gF,gU,favS,hf,hu,pf,pu);
-    var pct=Math.round(prob*1000)/10;
-    var prePct=Math.round(Pelo*1000)/10;
-    var band=gap<50?'E0':gap<150?'E1':gap<300?'E2':'E3';
+    // Compute
+    var prob   = pMatch(sF,sU,gF,gU,favServes,hf,hu,pf,pu);
+    var pct    = Math.round(prob*1000)/10;
+    var prePct = Math.round(Pelo*1000)/10;
+    var band   = gap<50?'E0':gap<150?'E1':gap<300?'E2':'E3';
 
+    // Display
     var pEl=document.getElementById('r-pct');
     var cls=(pct>=70)?'hi':(pct>=55)?'mid':(pct>=40)?'lo':'crit';
     pEl.textContent=pct.toFixed(1)+'%';

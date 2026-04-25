@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -16,7 +16,6 @@
 body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-height:100vh;}
 .header{background:linear-gradient(160deg,#0a0f1e,#0d1930);border-bottom:1px solid var(--border);padding:18px 18px 14px;}
 .header-top{display:flex;align-items:center;gap:10px;}
-.header-icon{font-size:28px;}
 .header-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--accent);}
 .header-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;}
 .tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--bg2);border-bottom:2px solid var(--border);}
@@ -25,13 +24,19 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 .content{padding:14px;max-width:480px;margin:0 auto;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
 .card-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.row3{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end;}
-.sep{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--muted2);text-align:center;padding-bottom:10px;}
-.field{display:flex;flex-direction:column;gap:4px;}
-.field label{font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;}
-.field input{background:var(--bg2);border:1.5px solid var(--border);border-radius:7px;padding:10px 12px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;text-align:center;outline:none;width:100%;transition:border-color .15s;-webkit-appearance:none;}
-.field input:focus{border-color:var(--accent);}
+
+/* SCORE ROWS — always LTR: A on left, B on right */
+.score-wrap{direction:ltr;margin-bottom:14px;}
+.score-labels{display:grid;grid-template-columns:1fr 36px 1fr;gap:8px;margin-bottom:4px;}
+.score-labels span{font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--accent);text-transform:uppercase;text-align:center;}
+.score-labels span.b{color:var(--muted);}
+.score-row{display:grid;grid-template-columns:1fr 36px 1fr;gap:8px;align-items:center;}
+.sep{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:var(--muted2);text-align:center;}
+.score-input{background:var(--bg2);border:1.5px solid var(--border);border-radius:7px;padding:10px 6px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;text-align:center;outline:none;width:100%;transition:border-color .15s;-webkit-appearance:none;}
+.score-input:focus{border-color:var(--accent);}
+.score-input.a-input{border-color:rgba(0,212,255,.3);}
+.score-input.b-input{border-color:rgba(90,106,133,.3);}
+
 .btn-group{display:flex;gap:6px;}
 .btn-surf{flex:1;padding:10px 6px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;}
 .btn-surf.active-hard{border-color:var(--blue);color:var(--blue);background:rgba(77,159,255,.08);}
@@ -39,13 +44,16 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 .btn-surf.active-grass{border-color:var(--green);color:var(--green);background:rgba(0,229,160,.08);}
 .btn-srv{flex:1;padding:9px 8px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;}
 .btn-srv.active{border-color:var(--gold);color:var(--gold);background:rgba(255,201,71,.08);}
+.section-lbl{font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+
 .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
-.qs{padding:7px 9px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .15s;text-align:right;}
+.qs{padding:7px 9px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .15s;text-align:center;direction:ltr;}
 .qs:hover{border-color:var(--accent);}
 .qs.gold-state{border-color:rgba(255,201,71,.3);}
 .qs-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);display:block;margin-bottom:2px;}
 .qs-num.g{color:var(--gold);}
 .qs-desc{font-size:11px;color:var(--muted);line-height:1.3;}
+
 .calc-btn{width:100%;padding:16px;background:linear-gradient(135deg,#005580,#007daa);border:none;border-radius:10px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2px;cursor:pointer;margin:4px 0 10px;transition:all .2s;}
 .calc-btn:active{transform:scale(.98);}
 .error{background:rgba(255,51,85,.08);border:1px solid rgba(255,51,85,.4);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:8px;display:none;}
@@ -64,14 +72,14 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 .result-cell-val{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;color:var(--text);}
 .result-cell-key{font-size:10px;color:var(--muted);margin-top:3px;}
 .result-note{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);line-height:1.6;border-top:1px solid var(--border);padding-top:10px;}
-.helper{font-size:11px;color:var(--muted);margin-top:5px;}
+.helper{font-size:11px;color:var(--muted);margin-top:5px;text-align:center;}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-top">
-    <span class="header-icon">🎾</span>
+    <span style="font-size:28px">🎾</span>
     <div><div class="header-title">TENNIS Bo3 CALCULATOR</div></div>
   </div>
   <div class="header-sub">MARKOV CHAIN · ELO-CALIBRATED · HARD / CLAY / GRASS</div>
@@ -83,15 +91,24 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 </div>
 
 <div class="content">
+
+  <!-- ELO -->
   <div class="card">
     <div class="card-title">Elo Rating</div>
-    <div class="row2">
-      <div class="field"><label>Player A</label><input type="number" id="elo-a" placeholder="2100" inputmode="numeric"></div>
-      <div class="field"><label>Player B</label><input type="number" id="elo-b" placeholder="1900" inputmode="numeric"></div>
+    <div class="score-wrap">
+      <div class="score-labels">
+        <span>Player A</span><span></span><span class="b">Player B</span>
+      </div>
+      <div class="score-row">
+        <input class="score-input a-input" type="number" id="elo-a" placeholder="2100" inputmode="numeric">
+        <div class="sep" style="font-size:13px;color:var(--muted)">vs</div>
+        <input class="score-input b-input" type="number" id="elo-b" placeholder="1900" inputmode="numeric">
+      </div>
     </div>
-    <div class="helper">Favorite = higher Elo (regardless of A/B)</div>
+    <div class="helper">Favorite = higher Elo &nbsp;|&nbsp; A is always LEFT</div>
   </div>
 
+  <!-- SURFACE -->
   <div class="card">
     <div class="card-title">Surface</div>
     <div class="btn-group">
@@ -101,48 +118,58 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
     </div>
   </div>
 
+  <!-- MATCH STATE -->
   <div class="card">
     <div class="card-title">Match State</div>
-    <div style="margin-bottom:12px">
-      <div class="field" style="margin-bottom:4px"><label>Sets Won</label></div>
-      <div class="row3">
-        <div class="field"><label>Player A</label><input type="number" id="sets-a" value="0" min="0" max="1" inputmode="numeric"></div>
-        <div class="sep">-</div>
-        <div class="field"><label>Player B</label><input type="number" id="sets-b" value="0" min="0" max="1" inputmode="numeric"></div>
+
+    <div class="section-lbl">Sets Won</div>
+    <div class="score-wrap">
+      <div class="score-labels">
+        <span>Player A</span><span></span><span class="b">Player B</span>
+      </div>
+      <div class="score-row">
+        <input class="score-input a-input" type="number" id="sets-a" value="0" min="0" max="1" inputmode="numeric">
+        <div class="sep">–</div>
+        <input class="score-input b-input" type="number" id="sets-b" value="0" min="0" max="1" inputmode="numeric">
       </div>
     </div>
-    <div style="margin-bottom:12px">
-      <div class="field" style="margin-bottom:4px"><label>Games in Current Set</label></div>
-      <div class="row3">
-        <div class="field"><label>Player A</label><input type="number" id="games-a" value="0" min="0" max="7" inputmode="numeric"></div>
-        <div class="sep">-</div>
-        <div class="field"><label>Player B</label><input type="number" id="games-b" value="0" min="0" max="7" inputmode="numeric"></div>
+
+    <div class="section-lbl">Games in Current Set</div>
+    <div class="score-wrap">
+      <div class="score-labels">
+        <span>Player A</span><span></span><span class="b">Player B</span>
+      </div>
+      <div class="score-row">
+        <input class="score-input a-input" type="number" id="games-a" value="0" min="0" max="7" inputmode="numeric">
+        <div class="sep">–</div>
+        <input class="score-input b-input" type="number" id="games-b" value="0" min="0" max="7" inputmode="numeric">
       </div>
     </div>
-    <div class="field">
-      <label>Who is serving?</label>
-      <div class="btn-group">
-        <button class="btn-srv active" id="srv-a" onclick="setSrv('A')">Player A serving</button>
-        <button class="btn-srv" id="srv-b" onclick="setSrv('B')">Player B serving</button>
-      </div>
+
+    <div class="section-lbl">Who is Serving?</div>
+    <div class="btn-group" style="direction:ltr">
+      <button class="btn-srv active" id="srv-a" onclick="setSrv('A')">Player A</button>
+      <button class="btn-srv" id="srv-b" onclick="setSrv('B')">Player B</button>
     </div>
   </div>
 
+  <!-- QUICK STATES -->
   <div class="card">
-    <div class="card-title">Quick States</div>
+    <div class="card-title">Quick States — A = Favorite</div>
     <div class="quick-grid">
       <button class="qs" onclick="qs(0)"><span class="qs-num">0</span><span class="qs-desc">Match start 0-0</span></button>
-      <button class="qs" onclick="qs(1)"><span class="qs-num">1</span><span class="qs-desc">Up 1 set, 3-3 set2, A serves</span></button>
-      <button class="qs" onclick="qs(2)"><span class="qs-num">2</span><span class="qs-desc">Up 1 set, 1-3 set2, B serves</span></button>
-      <button class="qs" onclick="qs(3)"><span class="qs-num">3</span><span class="qs-desc">Down 1 set, 1-1 set2, A serves</span></button>
-      <button class="qs" onclick="qs(4)"><span class="qs-num">4</span><span class="qs-desc">1-1 sets, 3-3 set3, A serves</span></button>
-      <button class="qs" onclick="qs(5)"><span class="qs-num">5</span><span class="qs-desc">1-1 sets, 3-3 set3, B serves</span></button>
-      <button class="qs gold-state" onclick="qs(6)"><span class="qs-num g">★ 6</span><span class="qs-desc">Up set+break, 3-1 set2, A serves</span></button>
-      <button class="qs" onclick="qs(7)"><span class="qs-num">7</span><span class="qs-desc">Down set+break, 1-3 set2, B serves</span></button>
-      <button class="qs" onclick="qs(8)"><span class="qs-num">8</span><span class="qs-desc">1-1 sets, 5-5 set3, A serves</span></button>
-      <button class="qs gold-state" onclick="qs(9)"><span class="qs-num g">★ 9</span><span class="qs-desc">1-1 sets, 5-4 set3, A serves</span></button>
-      <button class="qs" onclick="qs(10)" style="grid-column:span 2"><span class="qs-num">10</span><span class="qs-desc">1-1 sets, 0-0 start of set3, A serves</span></button>
+      <button class="qs" onclick="qs(1)"><span class="qs-num">1</span><span class="qs-desc">A up 1-0, 3-3, A serves</span></button>
+      <button class="qs" onclick="qs(2)"><span class="qs-num">2</span><span class="qs-desc">A up 1-0, 1-3, B serves</span></button>
+      <button class="qs" onclick="qs(3)"><span class="qs-num">3</span><span class="qs-desc">A down 0-1, 1-1, A serves</span></button>
+      <button class="qs" onclick="qs(4)"><span class="qs-num">4</span><span class="qs-desc">1-1 sets, 3-3, A serves</span></button>
+      <button class="qs" onclick="qs(5)"><span class="qs-num">5</span><span class="qs-desc">1-1 sets, 3-3, B serves</span></button>
+      <button class="qs gold-state" onclick="qs(6)"><span class="qs-num g">★ 6</span><span class="qs-desc">A up 1-0, A leads 3-1, A serves</span></button>
+      <button class="qs" onclick="qs(7)"><span class="qs-num">7</span><span class="qs-desc">A down 0-1, A trails 1-3, B serves</span></button>
+      <button class="qs" onclick="qs(8)"><span class="qs-num">8</span><span class="qs-desc">1-1 sets, 5-5, A serves</span></button>
+      <button class="qs gold-state" onclick="qs(9)"><span class="qs-num g">★ 9</span><span class="qs-desc">1-1 sets, A leads 5-4, A serves</span></button>
+      <button class="qs" onclick="qs(10)" style="grid-column:span 2"><span class="qs-num">10</span><span class="qs-desc">1-1 sets, 0-0 start of set 3, A serves</span></button>
     </div>
+    <div class="helper" style="margin-top:6px">★ = 90%+ for E2 player &nbsp;|&nbsp; A always = LEFT input</div>
   </div>
 
   <div class="error" id="err"></div>
@@ -163,30 +190,31 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 </div>
 
 <script>
-var tour = 'ATP', surf = 'hard', srv = 'A';
+var tour='ATP', surf='hard', srv='A';
 
-function setTour(t) {
-  tour = t;
-  document.getElementById('tab-atp').classList.toggle('active', t==='ATP');
-  document.getElementById('tab-wta').classList.toggle('active', t==='WTA');
+function setTour(t){
+  tour=t;
+  document.getElementById('tab-atp').classList.toggle('active',t==='ATP');
+  document.getElementById('tab-wta').classList.toggle('active',t==='WTA');
 }
-function setSurf(s) {
-  surf = s;
-  var list = ['hard','clay','grass'];
-  for (var i=0; i<list.length; i++)
-    document.getElementById('sf-'+list[i]).className = 'btn-surf'+(list[i]===s?' active-'+s:'');
+function setSurf(s){
+  surf=s;
+  var list=['hard','clay','grass'];
+  for(var i=0;i<list.length;i++)
+    document.getElementById('sf-'+list[i]).className='btn-surf'+(list[i]===s?' active-'+s:'');
 }
-function setSrv(s) {
-  srv = s;
-  document.getElementById('srv-a').classList.toggle('active', s==='A');
-  document.getElementById('srv-b').classList.toggle('active', s==='B');
+function setSrv(s){
+  srv=s;
+  document.getElementById('srv-a').classList.toggle('active',s==='A');
+  document.getElementById('srv-b').classList.toggle('active',s==='B');
 }
+
 var QS=[
   [0,0,0,0,'A'],[1,0,3,3,'A'],[1,0,1,3,'B'],[0,1,1,1,'A'],
   [1,1,3,3,'A'],[1,1,3,3,'B'],[1,0,3,1,'A'],[0,1,1,3,'B'],
   [1,1,5,5,'A'],[1,1,5,4,'A'],[1,1,0,0,'A']
 ];
-function qs(n) {
+function qs(n){
   var q=QS[n];
   document.getElementById('sets-a').value=q[0];
   document.getElementById('sets-b').value=q[1];
@@ -195,120 +223,61 @@ function qs(n) {
   setSrv(q[4]);
 }
 
-// ── MATH ──────────────────────────────────────────────────
-// All functions take:
-//   pf = P(favorite wins a serve point on their own serve)
-//   pu = P(underdog wins a serve point on their own serve)
-//   hf = P(favorite holds serve) = gameProb(pf)
-//   hu = P(underdog holds serve) = gameProb(pu)
-// favServes = true means the FAVORITE is currently serving
-
-function gameProb(p) {
-  if (p<=0) return 0; if (p>=1) return 1;
-  var q=1-p, d=20*Math.pow(p*q,3), w=p*p/(p*p+q*q);
+function gameProb(p){
+  if(p<=0)return 0;if(p>=1)return 1;
+  var q=1-p,d=20*Math.pow(p*q,3),w=p*p/(p*p+q*q);
   return Math.pow(p,4)+4*Math.pow(p,4)*q+10*Math.pow(p,4)*q*q+d*w;
 }
 
-// P(favorite wins tiebreak | favServes = true/false for first point)
-function pTB(hf, hu, pf, pu, favServes) {
-  // At each point, who serves rotates: first 1 point, then every 2
-  // favServes refers to who serves point 0
-  // Use memoization with string keys
-  var memo = {};
-  function solve(fa, ua, fServes) {
-    // fa = favorite's points, ua = underdog's points
-    if (fa>=7 && fa-ua>=2) return 1;
-    if (ua>=7 && ua-fa>=2) return 0;
-    var k = fa+'_'+ua+'_'+(fServes?1:0);
-    if (memo[k] !== undefined) return memo[k];
-    // At 6-6: use geometric series (same serve pattern repeats every 2 points)
-    if (fa===6 && ua===6) {
-      // point 12: fServes? then point 13 flips
-      var p0 = fServes ? pf : (1-pu);
-      // next point served by other
-      var p1 = fServes ? (1-pu) : pf;
-      var pFavWin2 = p0*p1;           // fav wins both
-      var pUndWin2 = (1-p0)*(1-p1);  // und wins both
-      var pDenom = pFavWin2 + pUndWin2;
-      memo[k] = pDenom > 0 ? pFavWin2/pDenom : 0.5;
-      return memo[k];
+function pSet(gF,gU,favSrv,hf,hu,pf,pu){
+  var m={};
+  function s(f,u,fs){
+    if(f>=6&&u<=f-2)return 1;
+    if(u>=6&&f<=u-2)return 0;
+    if(f===7&&u===6)return 1;
+    if(u===7&&f===6)return 0;
+    var k=f+'_'+u+'_'+(fs?1:0);
+    if(m[k]!==undefined)return m[k];
+    if(f===6&&u===6){
+      var p0=fs?pf:(1-pu),p1=fs?(1-pu):pf;
+      var pA=p0*p1,pB=(1-p0)*(1-p1);
+      m[k]=(pA+pB>0)?pA/(pA+pB):0.5;return m[k];
     }
-    // Who serves next point?
-    var tot = fa+ua;
-    var curFav;
-    if (tot===0) curFav = favServes;
-    else {
-      // point 0: favServes, then every 2 alternates
-      var flips = Math.floor((tot+1)/2); // number of service switches after point 0
-      curFav = (flips%2===0) ? favServes : !favServes;
-    }
-    var pw = curFav ? pf : (1-pu); // P(favorite wins this point)
-    memo[k] = pw*solve(fa+1,ua,favServes) + (1-pw)*solve(fa,ua+1,favServes);
-    return memo[k];
+    var pw=fs?hf:(1-hu);
+    m[k]=pw*s(f+1,u,!fs)+(1-pw)*s(f,u+1,!fs);return m[k];
   }
-  return solve(0,0,favServes);
+  return s(gF,gU,favSrv);
 }
 
-// P(favorite wins set | gF-gU games, favServes = true/false)
-function pSet(gF, gU, favServes, hf, hu, pf, pu) {
-  var memo = {};
-  function solve(f, u, fs) {
-    // Terminal: won set
-    if (f>=6 && u<=f-2) return 1;
-    if (u>=6 && f<=u-2) return 0;
-    if (f===7 && u===6) return 1;
-    if (u===7 && f===6) return 0;
-    var k = f+'_'+u+'_'+(fs?1:0);
-    if (memo[k] !== undefined) return memo[k];
-    if (f===6 && u===6) {
-      memo[k] = pTB(hf, hu, pf, pu, fs);
-      return memo[k];
-    }
-    var pw = fs ? hf : (1-hu); // P(favorite wins this game)
-    memo[k] = pw*solve(f+1,u,!fs) + (1-pw)*solve(f,u+1,!fs);
-    return memo[k];
-  }
-  return solve(gF, gU, favServes);
+function freshS(hf,hu,pf,pu){
+  return(pSet(0,0,true,hf,hu,pf,pu)+pSet(0,0,false,hf,hu,pf,pu))/2;
 }
 
-// Average fresh set (average of fav serving first vs not)
-function pFreshSet(hf, hu, pf, pu) {
-  return (pSet(0,0,true,hf,hu,pf,pu) + pSet(0,0,false,hf,hu,pf,pu)) / 2;
+function pMatch(sF,sU,gF,gU,favSrv,hf,hu,pf,pu){
+  var pC=pSet(gF,gU,favSrv,hf,hu,pf,pu);
+  var S=freshS(hf,hu,pf,pu);
+  if(sF===1&&sU===1)return pC;
+  if(sF===1&&sU===0)return pC+(1-pC)*S;
+  if(sF===0&&sU===1)return pC*S;
+  return pC*S*(2-S)+(1-pC)*S*S;
 }
 
-// P(favorite wins match | current state)
-function pMatch(sF, sU, gF, gU, favServes, hf, hu, pf, pu) {
-  var pCur = pSet(gF, gU, favServes, hf, hu, pf, pu);
-  var S    = pFreshSet(hf, hu, pf, pu);
-  if (sF===1 && sU===1) return pCur;            // deciding set
-  if (sF===1 && sU===0) return pCur+(1-pCur)*S; // fav leads
-  if (sF===0 && sU===1) return pCur*S;           // fav trails
-  // 0-0
-  return pCur*S*(2-S) + (1-pCur)*S*S;
-}
+var BASE={ATP:{hard:0.630,clay:0.580,grass:0.670},WTA:{hard:0.565,clay:0.525,grass:0.590}};
 
-// Calibrate: find delta so pMatch(0-0) = Pelo
-var BASE = {
-  ATP:{hard:0.630,clay:0.580,grass:0.670},
-  WTA:{hard:0.565,clay:0.525,grass:0.590}
-};
-function calibrate(base, Pelo) {
-  var maxD = Math.min(base-0.02, 0.98-base);
-  function tryD(d) {
-    var pf=base+d, pu=base-d;
-    var hf=gameProb(pf), hu=gameProb(pu);
-    var S1=pSet(0,0,true,hf,hu,pf,pu), S2=pSet(0,0,false,hf,hu,pf,pu);
-    var S=(S1+S2)/2;
+function calibrate(base,Pelo){
+  var maxD=Math.min(base-0.02,0.98-base);
+  function tryD(d){
+    var pf=base+d,pu=base-d,hf=gameProb(pf),hu=gameProb(pu);
+    var S1=pSet(0,0,true,hf,hu,pf,pu),S2=pSet(0,0,false,hf,hu,pf,pu),S=(S1+S2)/2;
     return S1*S*(2-S)+(1-S1)*S*S;
   }
-  var lo=0, hi=maxD, m;
-  for (var i=0; i<60; i++) { m=(lo+hi)/2; if(tryD(m)<Pelo) lo=m; else hi=m; }
-  return (lo+hi)/2;
+  var lo=0,hi=maxD,m;
+  for(var i=0;i<60;i++){m=(lo+hi)/2;if(tryD(m)<Pelo)lo=m;else hi=m;}
+  return(lo+hi)/2;
 }
 
-// ── MAIN ──────────────────────────────────────────────────
-function calc() {
-  try {
+function calc(){
+  try{
     var eA=parseFloat(document.getElementById('elo-a').value);
     var eB=parseFloat(document.getElementById('elo-b').value);
     var sA=parseInt(document.getElementById('sets-a').value)||0;
@@ -317,38 +286,33 @@ function calc() {
     var gB=parseInt(document.getElementById('games-b').value)||0;
     var aServes=(srv==='A');
 
-    var errEl=document.getElementById('err'), resEl=document.getElementById('result');
+    var errEl=document.getElementById('err'),resEl=document.getElementById('result');
     function fail(msg){errEl.textContent=msg;errEl.classList.add('show');resEl.classList.remove('show');}
     errEl.classList.remove('show');
 
-    if (isNaN(eA)||isNaN(eB)||eA<100||eB<100) return fail('Enter valid Elo ratings');
-    if (eA===eB) return fail('Elo ratings must be different');
-    if (sA<0||sA>1||sB<0||sB>1) return fail('Sets: 0 or 1 only');
-    if (gA<0||gA>7||gB<0||gB>7) return fail('Games: 0 to 7 only');
+    if(isNaN(eA)||isNaN(eB)||eA<100||eB<100)return fail('Enter valid Elo ratings');
+    if(eA===eB)return fail('Elo ratings must be different');
+    if(sA<0||sA>1||sB<0||sB>1)return fail('Sets: 0 or 1 only');
+    if(gA<0||gA>7||gB<0||gB>7)return fail('Games: 0 to 7 only');
 
-    // Determine favorite
-    var favIsA = (eA>eB);
-    var gap    = Math.abs(eA-eB);
-    var Pelo   = 1/(1+Math.pow(10,-gap/400)); // P(fav wins pre-match)
+    var favIsA=(eA>eB);
+    var gap=Math.abs(eA-eB);
+    var Pelo=1/(1+Math.pow(10,-gap/400));
 
-    // Remap to fav/und perspective
-    var sF = favIsA?sA:sB,  sU = favIsA?sB:sA;
-    var gF = favIsA?gA:gB,  gU = favIsA?gB:gA;
-    var favServes = favIsA ? aServes : !aServes;
+    var sF=favIsA?sA:sB, sU=favIsA?sB:sA;
+    var gF=favIsA?gA:gB, gU=favIsA?gB:gA;
+    var favSrv=favIsA?aServes:!aServes;
 
-    // Calibrate serve probabilities
-    var base  = BASE[tour][surf];
-    var delta = calibrate(base, Pelo);
-    var pf=base+delta, pu=base-delta;
-    var hf=gameProb(pf), hu=gameProb(pu);
+    var base=BASE[tour][surf];
+    var delta=calibrate(base,Pelo);
+    var pf=base+delta,pu=base-delta;
+    var hf=gameProb(pf),hu=gameProb(pu);
 
-    // Compute
-    var prob   = pMatch(sF,sU,gF,gU,favServes,hf,hu,pf,pu);
-    var pct    = Math.round(prob*1000)/10;
-    var prePct = Math.round(Pelo*1000)/10;
-    var band   = gap<50?'E0':gap<150?'E1':gap<300?'E2':'E3';
+    var prob=pMatch(sF,sU,gF,gU,favSrv,hf,hu,pf,pu);
+    var pct=Math.round(prob*1000)/10;
+    var prePct=Math.round(Pelo*1000)/10;
+    var band=gap<50?'E0':gap<150?'E1':gap<300?'E2':'E3';
 
-    // Display
     var pEl=document.getElementById('r-pct');
     var cls=(pct>=70)?'hi':(pct>=55)?'mid':(pct>=40)?'lo':'crit';
     pEl.textContent=pct.toFixed(1)+'%';
@@ -366,20 +330,17 @@ function calc() {
     var sNames={hard:'Hard',clay:'Clay',grass:'Grass'};
     document.getElementById('r-surf').textContent=sNames[surf];
     document.getElementById('r-who').textContent=
-      'Win probability — '+(favIsA?'Player A (Favorite)':'Player A (Underdog)');
+      'Win prob — '+(favIsA?'A (Favorite)':'A (Underdog)');
 
     var diff=Math.abs(pct-prePct);
     var note='Markov Chain calibrated to Elo | '+sNames[surf];
-    if (diff>10) note+=' | '+diff.toFixed(1)+'pp shift vs pre-match';
-    if (pct>=90) note+=' | Rare state — compare to market';
+    if(diff>10)note+=' | '+diff.toFixed(1)+'pp shift vs pre-match';
+    if(pct>=90)note+=' | Rare state — compare to market';
     document.getElementById('r-note').textContent=note;
 
     resEl.classList.add('show');
     setTimeout(function(){resEl.scrollIntoView({behavior:'smooth',block:'nearest'});},50);
-
-  } catch(e) {
-    alert('Error: '+e.message);
-  }
+  }catch(e){alert('Error: '+e.message);}
 }
 
 setSurf('hard');

@@ -16,9 +16,9 @@
 body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-height:100vh;}
 .header{background:linear-gradient(160deg,#0a0f1e,#0d1930);border-bottom:1px solid var(--border);padding:18px 18px 14px;}
 .header-top{display:flex;align-items:center;gap:10px;}
-.header-icon{font-size:28px;filter:drop-shadow(0 0 8px rgba(0,212,255,.5));}
-.header-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--accent);text-shadow:0 0 20px rgba(0,212,255,.3);}
-.header-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:.5px;}
+.header-icon{font-size:28px;}
+.header-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--accent);}
+.header-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;}
 .tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--bg2);border-bottom:2px solid var(--border);}
 .tab{padding:13px 8px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;position:relative;top:2px;}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,.04);}
@@ -41,21 +41,19 @@ body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-h
 .btn-srv.active{border-color:var(--gold);color:var(--gold);background:rgba(255,201,71,.08);}
 .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
 .qs{padding:7px 9px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .15s;text-align:right;}
-.qs:hover{border-color:var(--accent);background:rgba(0,212,255,.04);}
+.qs:hover{border-color:var(--accent);}
 .qs.gold-state{border-color:rgba(255,201,71,.3);}
 .qs-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);display:block;margin-bottom:2px;}
 .qs-num.g{color:var(--gold);}
 .qs-desc{font-size:11px;color:var(--muted);line-height:1.3;}
-.calc-btn{width:100%;padding:16px;background:linear-gradient(135deg,#005580,#007daa);border:none;border-radius:10px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2px;cursor:pointer;margin:4px 0 10px;transition:all .2s;box-shadow:0 4px 20px rgba(0,212,255,.15);}
-.calc-btn:hover{background:linear-gradient(135deg,#006699,#009acc);}
+.calc-btn{width:100%;padding:16px;background:linear-gradient(135deg,#005580,#007daa);border:none;border-radius:10px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2px;cursor:pointer;margin:4px 0 10px;transition:all .2s;}
 .calc-btn:active{transform:scale(.98);}
 .error{background:rgba(255,51,85,.08);border:1px solid rgba(255,51,85,.4);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:8px;display:none;}
 .error.show{display:block;}
-.result{background:linear-gradient(160deg,#0a1428,#0d1830);border:2px solid var(--accent);border-radius:12px;padding:22px 18px;text-align:center;display:none;box-shadow:0 0 40px rgba(0,212,255,.1);}
-.result.show{display:block;animation:fadeUp .3s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.result-who{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;margin-bottom:4px;}
-.result-pct{font-family:'Barlow Condensed',sans-serif;font-size:88px;font-weight:900;line-height:1;letter-spacing:-2px;margin:4px 0 8px;text-shadow:0 0 30px currentColor;}
+.result{background:linear-gradient(160deg,#0a1428,#0d1830);border:2px solid var(--accent);border-radius:12px;padding:22px 18px;text-align:center;display:none;}
+.result.show{display:block;}
+.result-who{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-bottom:4px;}
+.result-pct{font-family:'Barlow Condensed',sans-serif;font-size:88px;font-weight:900;line-height:1;letter-spacing:-2px;margin:4px 0 8px;}
 .result-pct.hi{color:var(--green);}
 .result-pct.mid{color:var(--gold);}
 .result-pct.lo{color:var(--orange);}
@@ -184,28 +182,24 @@ function setTour(t) {
   document.getElementById('tab-atp').classList.toggle('active', t === 'ATP');
   document.getElementById('tab-wta').classList.toggle('active', t === 'WTA');
 }
-
 function setSurf(s) {
   surf = s;
   var list = ['hard','clay','grass'];
   for (var i = 0; i < list.length; i++) {
-    var b = document.getElementById('sf-' + list[i]);
-    b.className = 'btn-surf' + (list[i] === s ? ' active-' + s : '');
+    document.getElementById('sf-'+list[i]).className =
+      'btn-surf' + (list[i] === s ? ' active-'+s : '');
   }
 }
-
 function setSrv(s) {
   srv = s;
   document.getElementById('srv-a').classList.toggle('active', s === 'A');
   document.getElementById('srv-b').classList.toggle('active', s === 'B');
 }
-
 var QS = [
   [0,0,0,0,'A'],[1,0,3,3,'A'],[1,0,1,3,'B'],[0,1,1,1,'A'],
   [1,1,3,3,'A'],[1,1,3,3,'B'],[1,0,3,1,'A'],[0,1,1,3,'B'],
   [1,1,5,5,'A'],[1,1,5,4,'A'],[1,1,0,0,'A']
 ];
-
 function qs(n) {
   var q = QS[n];
   document.getElementById('sets-a').value  = q[0];
@@ -215,122 +209,143 @@ function qs(n) {
   setSrv(q[4]);
 }
 
-// P(server wins game)
+// ── MATH ─────────────────────────────────────────────────────
+
 function gameProb(p) {
   if (p <= 0) return 0;
   if (p >= 1) return 1;
   var q = 1 - p;
-  var deuce = 20 * Math.pow(p * q, 3);
-  var wD = (p * p) / (p * p + q * q);
+  var deuce = 20 * Math.pow(p*q, 3);
+  var wD = p*p / (p*p + q*q);
   return Math.pow(p,4) + 4*Math.pow(p,4)*q + 10*Math.pow(p,4)*q*q + deuce*wD;
 }
 
-// Tiebreak: pure iterative, backward induction, no recursion
-// Max tiebreak score is 7 (or more in deuce), we cap table at 8+8
-function tbWin(pa, pb, aFirst) {
-  var SIZE = 9; // 0..8 for each player (7 wins needed, max deuce at 6-6)
-  // Create flat array: index = ta*SIZE + tb
-  var T = new Array(SIZE * SIZE);
-  var ta, tb, idx, aS, pW;
-
-  // Who serves at this point total
-  function aServesNow(total) {
-    if (total === 0) return aFirst;
-    var grp = Math.floor((total - 1) / 2);
-    return aFirst ? (grp % 2 === 0) : (grp % 2 !== 0);
-  }
-
-  // Fill terminal states first
-  for (ta = 0; ta < SIZE; ta++) {
-    for (tb = 0; tb < SIZE; tb++) {
-      idx = ta * SIZE + tb;
-      if (ta >= 7 && ta - tb >= 2) {
-        T[idx] = 1.0;
-      } else if (tb >= 7 && tb - ta >= 2) {
-        T[idx] = 0.0;
-      } else {
-        T[idx] = -1; // not yet computed
-      }
-    }
-  }
-
-  // Backward induction from high scores down
-  for (ta = SIZE - 2; ta >= 0; ta--) {
-    for (tb = SIZE - 2; tb >= 0; tb--) {
-      idx = ta * SIZE + tb;
-      if (T[idx] !== -1) continue; // already set (terminal)
-      aS = aServesNow(ta + tb);
-      pW = aS ? pa : (1 - pb);
-      var vWin  = T[(ta+1) * SIZE + tb];
-      var vLose = T[ta * SIZE + (tb+1)];
-      // If children not computed yet (shouldn't happen with backward order, but safety):
-      if (vWin === -1)  vWin  = 0.5;
-      if (vLose === -1) vLose = 0.5;
-      T[idx] = pW * vWin + (1 - pW) * vLose;
-    }
-  }
-
-  return T[0];
+// Tiebreak: who serves first in a block of 2 (first point solo)
+// Point total 0 -> aFirst serves. Then alternate every 2.
+function tbServes(tot, aFirst) {
+  if (tot === 0) return aFirst;
+  // after point 0, blocks of 2: points 1-2, 3-4, 5-6 ...
+  var block = Math.ceil(tot / 2); // which block (1-indexed)
+  return aFirst ? (block % 2 === 0) : (block % 2 !== 0);
 }
 
-// Set: pure iterative, backward induction, no recursion
-function setWin(startA, startB, aServesFirst, ha, hb, pa, pb) {
-  // States: games 0..7 for each player, server bit
-  // We use a plain object as cache: key = "a_b_s"
-  var cache = {};
-  var a, b, s, key, pW, vWin, vLose, isTerminal, val;
+// P(A wins tiebreak from 0-0)
+// Uses closed-form for deuce states, iteration for the rest
+function calcTB(pa, pb, aFirst) {
+  // pWin[ta][tb] = P(A wins TB | score ta-tb)
+  // We need states 0..7 x 0..7, plus deuce (6-6+)
+  // At 6-6: deuce. P(A wins from deuce) = pa_d^2 / (pa_d^2 + pb_d^2)
+  // where pa_d = P(A wins point at deuce) = tbServes(12, aFirst) ? pa : (1-pb)
+  // Actually deuce serves alternate starting from whoever serves at 6-6 total=12
+  // But in real tiebreak deuce (6-6), they keep alternating every 2 points
+  // Simple: at 6-6, A serves point 12 if tbServes(12,aFirst)
+  // P(A wins from deuce) with server s:
+  //   pW = s==A ? pa : (1-pb)
+  //   = pW*pW / (pW*pW + (1-pW)*(1-pW)) -- no, server changes after 2 points
+  // Keep it simple: at 6-6, compute recursively up to 8-8, then use infinite series
 
-  function termVal(a, b) {
-    // Returns win(1), loss(0), or -1 if not terminal
-    if (a === 7 && b === 6) return 1;
-    if (b === 7 && a === 6) return 0;
-    if (a >= 6 && b <= a-2) return 1;
-    if (b >= 6 && a <= b-2) return 0;
-    return -1;
+  // Build table using plain object, fill from high scores to low
+  var T = {};
+
+  function key(a,b) { return a*100+b; }
+
+  function getT(a,b) {
+    // Terminal
+    if (a >= 7 && a-b >= 2) return 1;
+    if (b >= 7 && b-a >= 2) return 0;
+    var v = T[key(a,b)];
+    return (v === undefined) ? 0.5 : v;
   }
 
-  // Fill all states from high game counts down
+  // Fill from a=7 down to 0, b=7 down to 0
+  var a, b, tot, aS, pW;
+  for (a = 7; a >= 0; a--) {
+    for (b = 7; b >= 0; b--) {
+      // Skip already-terminal
+      if (a >= 7 && a-b >= 2) continue;
+      if (b >= 7 && b-a >= 2) continue;
+
+      if (a === 6 && b === 6) {
+        // Deuce in tiebreak: compute via geometric series
+        // At 6-6, total points played = 12. Server = tbServes(12, aFirst)
+        // Two points then switch. Let p1 = P(A wins point 12), p2 = P(A wins point 13)
+        var s0 = tbServes(12, aFirst);
+        var s1 = tbServes(13, aFirst);
+        var p1 = s0 ? pa : (1-pb);
+        var p2 = s1 ? pa : (1-pb);
+        // P(A wins mini-game of 2 points) = p1*p2
+        // P(B wins mini-game) = (1-p1)*(1-p2)
+        // P(deuce again) = p1*(1-p2) + (1-p1)*p2
+        // But next deuce same two servers (points 14,15 same pattern as 12,13)
+        var pA2 = p1 * p2;
+        var pB2 = (1-p1) * (1-p2);
+        var pD2 = 1 - pA2 - pB2;
+        // P(A wins from deuce) = pA2 / (pA2 + pB2)  [geometric series]
+        T[key(6,6)] = (pA2 + pB2 > 0) ? pA2 / (pA2 + pB2) : 0.5;
+        continue;
+      }
+
+      tot = a + b;
+      aS  = tbServes(tot, aFirst);
+      pW  = aS ? pa : (1-pb);
+      T[key(a,b)] = pW * getT(a+1,b) + (1-pW) * getT(a,b+1);
+    }
+  }
+
+  return getT(0,0);
+}
+
+// P(A wins set from gA-gB, aServesFirst)
+function calcSet(gA, gB, aServesFirst, ha, hb, pa, pb) {
+  var T = {};
+
+  function key(a,b,s) { return a*1000 + b*10 + s; }
+
+  function getT(a,b,s) {
+    // Terminal states
+    if (a >= 6 && b <= a-2 && !(a===6&&b===6)) return 1;
+    if (b >= 6 && a <= b-2 && !(a===6&&b===6)) return 0;
+    if (a === 7 && b === 6) return 1;
+    if (b === 7 && a === 6) return 0;
+    var v = T[key(a,b,s)];
+    return (v === undefined) ? 0.5 : v;
+  }
+
+  var a, b, s, pW;
   for (a = 7; a >= 0; a--) {
     for (b = 7; b >= 0; b--) {
       for (s = 0; s <= 1; s++) {
-        key = a + '_' + b + '_' + s;
-        val = termVal(a, b);
-        if (val !== -1) {
-          cache[key] = val;
-          continue;
-        }
+        // Check terminal
+        if (a >= 6 && b <= a-2 && !(a===6&&b===6)) continue;
+        if (b >= 6 && a <= b-2 && !(a===6&&b===6)) continue;
+        if (a === 7 && b === 6) continue;
+        if (b === 7 && a === 6) continue;
+
         if (a === 6 && b === 6) {
-          cache[key] = tbWin(pa, pb, s === 1);
+          T[key(a,b,s)] = calcTB(pa, pb, s === 1);
           continue;
         }
-        pW = (s === 1) ? ha : (1 - hb);
-        var keyWin  = (a+1) + '_' + b     + '_' + (1-s);
-        var keyLose = a     + '_' + (b+1) + '_' + (1-s);
-        vWin  = (cache[keyWin]  !== undefined) ? cache[keyWin]  : 0.5;
-        vLose = (cache[keyLose] !== undefined) ? cache[keyLose] : 0.5;
-        cache[key] = pW * vWin + (1 - pW) * vLose;
+
+        pW = (s === 1) ? ha : (1-hb);
+        T[key(a,b,s)] = pW * getT(a+1, b, 1-s) + (1-pW) * getT(a, b+1, 1-s);
       }
     }
   }
 
-  var startKey = startA + '_' + startB + '_' + (aServesFirst ? 1 : 0);
-  return cache[startKey] !== undefined ? cache[startKey] : 0.5;
+  return getT(gA, gB, aServesFirst ? 1 : 0);
 }
 
-function freshS(ha, hb, pa, pb) {
-  var s1 = setWin(0, 0, true,  ha, hb, pa, pb);
-  var s2 = setWin(0, 0, false, ha, hb, pa, pb);
-  return (s1 + s2) / 2;
+function freshSet(ha, hb, pa, pb) {
+  return (calcSet(0,0,true,ha,hb,pa,pb) + calcSet(0,0,false,ha,hb,pa,pb)) / 2;
 }
 
-function matchWin(sA, sB, gA, gB, aS, ha, hb, pa, pb) {
-  var pCur = setWin(gA, gB, aS, ha, hb, pa, pb);
-  var S    = freshS(ha, hb, pa, pb);
-  if (sA === 1 && sB === 1) return pCur;
-  if (sA === 1 && sB === 0) return pCur + (1 - pCur) * S;
-  if (sA === 0 && sB === 1) return pCur * S;
-  // 0-0: playing set 1
-  return pCur * S * (2 - S) + (1 - pCur) * S * S;
+function matchProb(sA, sB, gA, gB, aS, ha, hb, pa, pb) {
+  var pCur = calcSet(gA, gB, aS, ha, hb, pa, pb);
+  var S    = freshSet(ha, hb, pa, pb);
+  if (sA===1 && sB===1) return pCur;
+  if (sA===1 && sB===0) return pCur + (1-pCur)*S;
+  if (sA===0 && sB===1) return pCur * S;
+  return pCur*S*(2-S) + (1-pCur)*S*S;
 }
 
 var BASE = {
@@ -339,104 +354,91 @@ var BASE = {
 };
 
 function calibrate(base, Pelo) {
-  var maxD = Math.min(base - 0.02, 0.98 - base);
-  function compute(d) {
-    var pf = base + d, pu = base - d;
-    var hf = gameProb(pf), hu = gameProb(pu);
-    var Saf = setWin(0, 0, true,  hf, hu, pf, pu);
-    var Sbf = setWin(0, 0, false, hf, hu, pf, pu);
-    var S   = (Saf + Sbf) / 2;
-    return Saf * S * (2-S) + (1-Saf) * S * S;
+  var maxD = Math.min(base-0.02, 0.98-base);
+  function tryD(d) {
+    var pf=base+d, pu=base-d;
+    var hf=gameProb(pf), hu=gameProb(pu);
+    var S1=calcSet(0,0,true,hf,hu,pf,pu);
+    var S2=calcSet(0,0,false,hf,hu,pf,pu);
+    var S=(S1+S2)/2;
+    return S1*S*(2-S)+(1-S1)*S*S;
   }
-  var lo = 0, hi = maxD, m;
-  for (var i = 0; i < 60; i++) {
-    m = (lo + hi) / 2;
-    if (compute(m) < Pelo) { lo = m; } else { hi = m; }
+  var lo=0, hi=maxD, m;
+  for (var i=0; i<60; i++) {
+    m=(lo+hi)/2;
+    if (tryD(m) < Pelo) lo=m; else hi=m;
   }
-  return (lo + hi) / 2;
+  return (lo+hi)/2;
 }
 
 function calc() {
   try {
-    var eA = parseFloat(document.getElementById('elo-a').value);
-    var eB = parseFloat(document.getElementById('elo-b').value);
-    var sA = parseInt(document.getElementById('sets-a').value)  || 0;
-    var sB = parseInt(document.getElementById('sets-b').value)  || 0;
-    var gA = parseInt(document.getElementById('games-a').value) || 0;
-    var gB = parseInt(document.getElementById('games-b').value) || 0;
-    var aServes = (srv === 'A');
+    var eA=parseFloat(document.getElementById('elo-a').value);
+    var eB=parseFloat(document.getElementById('elo-b').value);
+    var sA=parseInt(document.getElementById('sets-a').value)||0;
+    var sB=parseInt(document.getElementById('sets-b').value)||0;
+    var gA=parseInt(document.getElementById('games-a').value)||0;
+    var gB=parseInt(document.getElementById('games-b').value)||0;
+    var aServes=(srv==='A');
 
-    var errEl = document.getElementById('err');
-    var resEl = document.getElementById('result');
-
-    function fail(msg) {
-      errEl.textContent = msg;
-      errEl.classList.add('show');
-      resEl.classList.remove('show');
-    }
+    var errEl=document.getElementById('err');
+    var resEl=document.getElementById('result');
+    function fail(msg){errEl.textContent=msg;errEl.classList.add('show');resEl.classList.remove('show');}
     errEl.classList.remove('show');
 
-    if (isNaN(eA) || isNaN(eB) || eA < 100 || eB < 100) return fail('Enter valid Elo ratings for both players');
-    if (eA === eB) return fail('Elo ratings are identical');
-    if (sA < 0 || sA > 1 || sB < 0 || sB > 1) return fail('Sets: valid values are 0 or 1');
-    if (gA < 0 || gA > 7 || gB < 0 || gB > 7) return fail('Games: valid values are 0 to 7');
+    if (isNaN(eA)||isNaN(eB)||eA<100||eB<100) return fail('Enter valid Elo ratings');
+    if (eA===eB) return fail('Elo ratings are identical');
+    if (sA<0||sA>1||sB<0||sB>1) return fail('Sets: 0 or 1 only');
+    if (gA<0||gA>7||gB<0||gB>7) return fail('Games: 0 to 7 only');
 
-    var favIsA = (eA > eB);
-    var eloFav = Math.max(eA, eB);
-    var eloUnd = Math.min(eA, eB);
-    var gap    = eloFav - eloUnd;
-    var Pelo   = 1 / (1 + Math.pow(10, -gap / 400));
+    var favIsA=(eA>eB);
+    var gap=Math.abs(eA-eB);
+    var Pelo=1/(1+Math.pow(10,-gap/400));
 
-    var sF   = favIsA ? sA : sB;
-    var sU   = favIsA ? sB : sA;
-    var gF   = favIsA ? gA : gB;
-    var gU   = favIsA ? gB : gA;
-    var favS = favIsA ? aServes : !aServes;
+    var sF=favIsA?sA:sB, sU=favIsA?sB:sA;
+    var gF=favIsA?gA:gB, gU=favIsA?gB:gA;
+    var favS=favIsA?aServes:!aServes;
 
-    var base  = BASE[tour][surf];
-    var delta = calibrate(base, Pelo);
-    var pf = base + delta;
-    var pu = base - delta;
-    var hf = gameProb(pf);
-    var hu = gameProb(pu);
+    var base=BASE[tour][surf];
+    var delta=calibrate(base,Pelo);
+    var pf=base+delta, pu=base-delta;
+    var hf=gameProb(pf), hu=gameProb(pu);
 
-    var prob   = matchWin(sF, sU, gF, gU, favS, hf, hu, pf, pu);
-    var pct    = Math.round(prob  * 1000) / 10;
-    var prePct = Math.round(Pelo  * 1000) / 10;
-    var band   = gap < 50 ? 'E0' : gap < 150 ? 'E1' : gap < 300 ? 'E2' : 'E3';
+    var prob=matchProb(sF,sU,gF,gU,favS,hf,hu,pf,pu);
+    var pct=Math.round(prob*1000)/10;
+    var prePct=Math.round(Pelo*1000)/10;
+    var band=gap<50?'E0':gap<150?'E1':gap<300?'E2':'E3';
 
-    var pEl = document.getElementById('r-pct');
-    var cls = (pct >= 70) ? 'hi' : (pct >= 55) ? 'mid' : (pct >= 40) ? 'lo' : 'crit';
-    pEl.textContent = pct.toFixed(1) + '%';
-    pEl.className   = 'result-pct ' + cls;
+    var pEl=document.getElementById('r-pct');
+    var cls=(pct>=70)?'hi':(pct>=55)?'mid':(pct>=40)?'lo':'crit';
+    pEl.textContent=pct.toFixed(1)+'%';
+    pEl.className='result-pct '+cls;
 
-    var bc  = { E0:'#4d9fff', E1:'#4d9fff', E2:'#00e5a0', E3:'#ffc947' };
-    var bEl = document.getElementById('r-band');
-    bEl.textContent      = band + '  |  Gap: ' + Math.round(gap) + ' pts';
-    bEl.style.color      = bc[band];
-    bEl.style.background = bc[band] + '18';
-    bEl.style.border     = '1px solid ' + bc[band] + '44';
+    var bc={E0:'#4d9fff',E1:'#4d9fff',E2:'#00e5a0',E3:'#ffc947'};
+    var bEl=document.getElementById('r-band');
+    bEl.textContent=band+'  |  Gap: '+Math.round(gap)+' pts';
+    bEl.style.color=bc[band];
+    bEl.style.background=bc[band]+'18';
+    bEl.style.border='1px solid '+bc[band]+'44';
 
-    document.getElementById('r-pre').textContent  = prePct.toFixed(1) + '%';
-    document.getElementById('r-gap').textContent  = Math.round(gap);
-    var sNames = { hard:'Hard', clay:'Clay', grass:'Grass' };
-    document.getElementById('r-surf').textContent = sNames[surf];
-    document.getElementById('r-who').textContent  =
-      'Win probability — ' + (favIsA ? 'Player A (Favorite)' : 'Player A (Underdog)');
+    document.getElementById('r-pre').textContent=prePct.toFixed(1)+'%';
+    document.getElementById('r-gap').textContent=Math.round(gap);
+    var sNames={hard:'Hard',clay:'Clay',grass:'Grass'};
+    document.getElementById('r-surf').textContent=sNames[surf];
+    document.getElementById('r-who').textContent=
+      'Win probability — '+(favIsA?'Player A (Favorite)':'Player A (Underdog)');
 
-    var diff = Math.abs(pct - prePct);
-    var note = 'Markov Chain calibrated to Elo | ' + sNames[surf];
-    if (diff > 10) note += ' | ' + diff.toFixed(1) + 'pp shift vs pre-match';
-    if (pct >= 90) note += ' | Rare state — compare to market';
-    document.getElementById('r-note').textContent = note;
+    var diff=Math.abs(pct-prePct);
+    var note='Markov Chain calibrated to Elo | '+sNames[surf];
+    if (diff>10) note+=' | '+diff.toFixed(1)+'pp shift vs pre-match';
+    if (pct>=90) note+=' | Rare state — compare to market';
+    document.getElementById('r-note').textContent=note;
 
     resEl.classList.add('show');
-    setTimeout(function() {
-      resEl.scrollIntoView({ behavior:'smooth', block:'nearest' });
-    }, 50);
+    setTimeout(function(){resEl.scrollIntoView({behavior:'smooth',block:'nearest'});},50);
 
   } catch(e) {
-    alert('Error: ' + e.message);
+    alert('Error: '+e.message);
   }
 }
 

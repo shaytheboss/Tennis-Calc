@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<!--
+  Tennis Bo3 Probability Calculator
+  GitHub Pages: העלה כ-index.html → Settings → Pages → Branch: main
+-->
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Tennis Bo3 — מחשבון הסתברות</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=JetBrains+Mono:wght@400;700&family=Heebo:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#080c14;--bg2:#0d1220;--card:#111827;--card2:#161f30;
+  --border:#1e2d45;--accent:#00d4ff;--gold:#ffc947;--green:#00e5a0;
+  --red:#ff3355;--orange:#ff8c00;--blue:#4d9fff;
+  --text:#dde4f0;--muted:#5a6a85;--muted2:#3d4f68;
+}
+body{background:var(--bg);color:var(--text);font-family:'Heebo',sans-serif;min-height:100vh;}
+.header{background:linear-gradient(160deg,#0a0f1e,#0d1930);border-bottom:1px solid var(--border);padding:18px 18px 14px;}
+.header-top{display:flex;align-items:center;gap:10px;}
+.header-icon{font-size:28px;filter:drop-shadow(0 0 8px rgba(0,212,255,.5));}
+.header-title{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:var(--accent);text-shadow:0 0 20px rgba(0,212,255,.3);}
+.header-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px;letter-spacing:.5px;}
+.conf-badges{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 8px;border-radius:3px;border:1px solid currentColor;opacity:.8;}
+.badge-h{color:var(--green);background:rgba(0,229,160,.08);}
+.badge-m{color:var(--gold);background:rgba(255,201,71,.08);}
+.badge-l{color:var(--orange);background:rgba(255,140,0,.08);}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--bg2);border-bottom:2px solid var(--border);}
+.tab{padding:13px 8px;text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;position:relative;top:2px;}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);background:rgba(0,212,255,.04);}
+.content{padding:14px;max-width:480px;margin:0 auto;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;}
+.card-title{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:12px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.row3{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:end;}
+.sep{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:var(--muted2);text-align:center;padding-bottom:10px;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--muted);text-transform:uppercase;}
+.field input{background:var(--bg2);border:1.5px solid var(--border);border-radius:7px;padding:10px 12px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;text-align:center;outline:none;width:100%;transition:border-color .15s;-webkit-appearance:none;}
+.field input:focus{border-color:var(--accent);}
+.btn-group{display:flex;gap:6px;}
+.btn-surf{flex:1;padding:10px 6px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-surf.active-hard{border-color:var(--blue);color:var(--blue);background:rgba(77,159,255,.08);}
+.btn-surf.active-clay{border-color:var(--orange);color:var(--orange);background:rgba(255,140,0,.08);}
+.btn-surf.active-grass{border-color:var(--green);color:var(--green);background:rgba(0,229,160,.08);}
+.btn-srv{flex:1;padding:9px 8px;border-radius:7px;border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;}
+.btn-srv.active{border-color:var(--gold);color:var(--gold);background:rgba(255,201,71,.08);}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.qs{padding:7px 9px;border-radius:6px;border:1px solid var(--border);background:var(--bg2);cursor:pointer;transition:all .15s;text-align:right;}
+.qs:hover{border-color:var(--accent);background:rgba(0,212,255,.04);}
+.qs.gold-state{border-color:rgba(255,201,71,.3);}
+.qs.gold-state:hover{border-color:var(--gold);background:rgba(255,201,71,.05);}
+.qs-num{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--accent);display:block;margin-bottom:2px;}
+.qs-num.g{color:var(--gold);}
+.qs-desc{font-size:11px;color:var(--muted);line-height:1.3;}
+.calc-btn{width:100%;padding:16px;background:linear-gradient(135deg,#005580,#007daa);border:none;border-radius:10px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:2px;cursor:pointer;margin:4px 0 10px;transition:all .2s;box-shadow:0 4px 20px rgba(0,212,255,.15);}
+.calc-btn:hover{background:linear-gradient(135deg,#006699,#009acc);}
+.calc-btn:active{transform:scale(.98);}
+.error{background:rgba(255,51,85,.08);border:1px solid rgba(255,51,85,.4);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:8px;display:none;}
+.error.show{display:block;}
+.result{background:linear-gradient(160deg,#0a1428,#0d1830);border:2px solid var(--accent);border-radius:12px;padding:22px 18px;text-align:center;display:none;box-shadow:0 0 40px rgba(0,212,255,.1);}
+.result.show{display:block;animation:fadeUp .3s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.result-who{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:.5px;margin-bottom:4px;}
+.result-pct{font-family:'Barlow Condensed',sans-serif;font-size:88px;font-weight:900;line-height:1;letter-spacing:-2px;margin:4px 0 8px;text-shadow:0 0 30px currentColor;}
+.result-pct.hi{color:var(--green);}
+.result-pct.mid{color:var(--gold);}
+.result-pct.lo{color:var(--orange);}
+.result-pct.crit{color:var(--red);}
+.result-band{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;margin-bottom:14px;}
+.result-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:12px;}
+.result-cell{background:var(--card2);padding:10px 6px;text-align:center;}
+.result-cell-val{font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:700;color:var(--text);}
+.result-cell-key{font-size:10px;color:var(--muted);margin-top:3px;}
+.result-note{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted2);line-height:1.6;border-top:1px solid var(--border);padding-top:10px;margin-top:2px;}
+.helper{font-size:11px;color:var(--muted);margin-top:5px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <span class="header-icon">🎾</span>
+    <div>
+      <div class="header-title">TENNIS Bo3 CALCULATOR</div>
+    </div>
+  </div>
+  <div class="header-sub">MARKOV CHAIN · ELO-CALIBRATED · HARD / CLAY / GRASS</div>
+  <div class="conf-badges">
+    <span class="badge badge-h">[H] אמפירי</span>
+    <span class="badge badge-m">[M] Markov מכויל ל-Elo</span>
+    <span class="badge badge-l">[L] הערכה</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" id="tab-atp" onclick="setTour('ATP')">⚡ גברים — ATP</div>
+  <div class="tab" id="tab-wta" onclick="setTour('WTA')">⚡ נשים — WTA</div>
+</div>
+
+<div class="content">
+
+  <div class="card">
+    <div class="card-title">📊 דירוג Elo</div>
+    <div class="row2">
+      <div class="field">
+        <label>שחקן A — Elo</label>
+        <input type="number" id="elo-a" placeholder="2100" min="500" max="3500" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label>שחקן B — Elo</label>
+        <input type="number" id="elo-b" placeholder="1900" min="500" max="3500" inputmode="numeric">
+      </div>
+    </div>
+    <div class="helper">* המועדף נקבע לפי ה-Elo הגבוה יותר (לא לפי A/B)</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🌍 משטח</div>
+    <div class="btn-group">
+      <button class="btn-surf active-hard" id="sf-hard" onclick="setSurf('hard')">הארד</button>
+      <button class="btn-surf" id="sf-clay" onclick="setSurf('clay')">חימר</button>
+      <button class="btn-surf" id="sf-grass" onclick="setSurf('grass')">עשב</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🎯 מצב המשחק הנוכחי</div>
+
+    <div style="margin-bottom:12px">
+      <div class="field" style="margin-bottom:4px"><label>סטים שנוצחו</label></div>
+      <div class="row3">
+        <div class="field"><label>שחקן A</label><input type="number" id="sets-a" value="0" min="0" max="1" inputmode="numeric"></div>
+        <div class="sep">–</div>
+        <div class="field"><label>שחקן B</label><input type="number" id="sets-b" value="0" min="0" max="1" inputmode="numeric"></div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <div class="field" style="margin-bottom:4px"><label>גיימים בסט הנוכחי</label></div>
+      <div class="row3">
+        <div class="field"><label>שחקן A</label><input type="number" id="games-a" value="0" min="0" max="7" inputmode="numeric"></div>
+        <div class="sep">–</div>
+        <div class="field"><label>שחקן B</label><input type="number" id="games-b" value="0" min="0" max="7" inputmode="numeric"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>מי מגיש עכשיו?</label>
+      <div class="btn-group">
+        <button class="btn-srv active" id="srv-a" onclick="setSrv('A')">שחקן A מגיש</button>
+        <button class="btn-srv" id="srv-b" onclick="setSrv('B')">שחקן B מגיש</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ מצבים מהירים — לחץ למילוי</div>
+    <div class="quick-grid">
+      <button class="qs" onclick="qs(0)"><span class="qs-num">0</span><span class="qs-desc">תחילת משחק 0-0</span></button>
+      <button class="qs" onclick="qs(1)"><span class="qs-num">1</span><span class="qs-desc">עלה סט · 3-3 סט2 · A מגיש</span></button>
+      <button class="qs" onclick="qs(2)"><span class="qs-num">2</span><span class="qs-desc">עלה סט · 1-3 סט2 · B מגיש</span></button>
+      <button class="qs" onclick="qs(3)"><span class="qs-num">3</span><span class="qs-desc">ירד סט · 1-1 סט2 · A מגיש</span></button>
+      <button class="qs" onclick="qs(4)"><span class="qs-num">4</span><span class="qs-desc">1-1 סטים · 3-3 סט3 · A מגיש</span></button>
+      <button class="qs" onclick="qs(5)"><span class="qs-num">5</span><span class="qs-desc">1-1 סטים · 3-3 סט3 · B מגיש</span></button>
+      <button class="qs gold-state" onclick="qs(6)"><span class="qs-num g">⭐ 6</span><span class="qs-desc">עלה סט+break · 3-1 סט2 · A מגיש</span></button>
+      <button class="qs" onclick="qs(7)"><span class="qs-num">7</span><span class="qs-desc">ירד סט+break · 1-3 סט2 · B מגיש</span></button>
+      <button class="qs" onclick="qs(8)"><span class="qs-num">8</span><span class="qs-desc">1-1 סטים · 5-5 סט3 · A מגיש</span></button>
+      <button class="qs gold-state" onclick="qs(9)"><span class="qs-num g">⭐ 9</span><span class="qs-desc">1-1 סטים · 5-4 סט3 · A מגיש</span></button>
+      <button class="qs" onclick="qs(10)" style="grid-column:span 2"><span class="qs-num">10</span><span class="qs-desc">1-1 סטים · 0-0 תחילת סט3 · A מגיש</span></button>
+    </div>
+    <div class="helper" style="margin-top:8px">⭐ = מצבי 90%+ (שחקן E2) לפי הטבלה</div>
+  </div>
+
+  <div class="error" id="err"></div>
+  <button class="calc-btn" onclick="calc()">▶ חשב הסתברות</button>
+
+  <div class="result" id="result">
+    <div class="result-who" id="r-who"></div>
+    <div class="result-pct hi" id="r-pct">—</div>
+    <div class="result-band" id="r-band">—</div>
+    <div class="result-grid">
+      <div class="result-cell"><div class="result-cell-val" id="r-pre">—</div><div class="result-cell-key">לפני המשחק</div></div>
+      <div class="result-cell"><div class="result-cell-val" id="r-gap">—</div><div class="result-cell-key">פער Elo</div></div>
+      <div class="result-cell"><div class="result-cell-val" id="r-surf">—</div><div class="result-cell-key">משטח</div></div>
+    </div>
+    <div class="result-note" id="r-note"></div>
+  </div>
+
+  <div style="height:30px"></div>
+</div>
+
+<script>
+// ── STATE ────────────────────────────────────────────────────
+let tour='ATP', surf='hard', srv='A';
+
+// ── UI ───────────────────────────────────────────────────────
+function setTour(t){
+  tour=t;
+  document.getElementById('tab-atp').classList.toggle('active',t==='ATP');
+  document.getElementById('tab-wta').classList.toggle('active',t==='WTA');
+}
+function setSurf(s){
+  surf=s;
+  ['hard','clay','grass'].forEach(x=>{
+    const b=document.getElementById('sf-'+x);
+    b.className='btn-surf'+(x===s?' active-'+x:'');
+  });
+}
+function setSrv(s){
+  srv=s;
+  document.getElementById('srv-a').classList.toggle('active',s==='A');
+  document.getElementById('srv-b').classList.toggle('active',s==='B');
+}
+
+// Quick states: [setsA, setsB, gamesA, gamesB, server]
+const QS=[
+  [0,0,0,0,'A'],[1,0,3,3,'A'],[1,0,1,3,'B'],[0,1,1,1,'A'],
+  [1,1,3,3,'A'],[1,1,3,3,'B'],[1,0,3,1,'A'],[0,1,1,3,'B'],
+  [1,1,5,5,'A'],[1,1,5,4,'A'],[1,1,0,0,'A']
+];
+function qs(n){
+  const[sA,sB,gA,gB,s]=QS[n];
+  document.getElementById('sets-a').value=sA;
+  document.getElementById('sets-b').value=sB;
+  document.getElementById('games-a').value=gA;
+  document.getElementById('games-b').value=gB;
+  setSrv(s);
+}
+
+// ── MATH: Markov Chain ───────────────────────────────────────
+
+// P(server wins game | p = prob winning each point on serve)
+function gameProb(p){
+  if(p<=0)return 0; if(p>=1)return 1;
+  const q=1-p;
+  const deuce=20*Math.pow(p*q,3);
+  const wD=p*p/(p*p+q*q);
+  return Math.pow(p,4)+4*Math.pow(p,4)*q+10*Math.pow(p,4)*q*q+deuce*wD;
+}
+
+// Hold rate → serve point probability (binary search)
+function h2p(h){
+  let lo=0.001,hi=0.999;
+  for(let i=0;i<64;i++){const m=(lo+hi)/2; gameProb(m)<h?lo=m:hi=m;}
+  return(lo+hi)/2;
+}
+
+// P(A wins tiebreak | p_a, p_b, aFirst)
+function tbWin(p_a,p_b,aFirst){
+  const c={};
+  function srvAt(tot){
+    if(tot===0)return true;
+    return Math.floor((tot-1)/2)%2===1;
+  }
+  function w(ta,tb){
+    if(ta>=7&&ta-tb>=2)return 1;
+    if(tb>=7&&tb-ta>=2)return 0;
+    const k=ta*100+tb;
+    if(c[k]!==undefined)return c[k];
+    const fs=srvAt(ta+tb);
+    const aS=aFirst?fs:!fs;
+    const pW=aS?p_a:(1-p_b);
+    return c[k]=pW*w(ta+1,tb)+(1-pW)*w(ta,tb+1);
+  }
+  return w(0,0);
+}
+
+// P(A wins set | score gA-gB, A serves next)
+function setWin(gA,gB,aS,ha,hb,pa,pb){
+  const c={};
+  function w(a,b,s){
+    if(a===7&&b<=5)return 1; if(a===7&&b===6)return 1;
+    if(b===7&&a<=5)return 0; if(b===7&&a===6)return 0;
+    if(a>=6&&a-b>=2)return 1; if(b>=6&&b-a>=2)return 0;
+    const k=a*1000+b*10+(s?1:0);
+    if(c[k]!==undefined)return c[k];
+    if(a===6&&b===6)return c[k]=tbWin(pa,pb,s);
+    const pW=s?ha:(1-hb);
+    return c[k]=pW*w(a+1,b,!s)+(1-pW)*w(a,b+1,!s);
+  }
+  return w(gA,gB,aS);
+}
+
+// Average fresh set win prob (A first + B first, averaged)
+function freshS(ha,hb,pa,pb){
+  return(setWin(0,0,true,ha,hb,pa,pb)+setWin(0,0,false,ha,hb,pa,pb))/2;
+}
+
+// P(A wins match from current state) — Bo3 closed form
+function matchWin(sA,sB,gA,gB,aS,ha,hb,pa,pb){
+  const pCur=setWin(gA,gB,aS,ha,hb,pa,pb);
+  const S=freshS(ha,hb,pa,pb);
+  if(sA===1&&sB===1)return pCur;
+  if(sA===1&&sB===0)return pCur+(1-pCur)*S;
+  if(sA===0&&sB===1)return pCur*S;
+  return pCur*S*(2-S)+(1-pCur)*S*S;
+}
+
+// Base serve point probs (tour × surface)
+// Source: ATP/WTA serve stats, Fitzpatrick 2019
+const BASE={
+  ATP:{hard:0.630,clay:0.580,grass:0.670},
+  WTA:{hard:0.565,clay:0.525,grass:0.590}
+};
+
+// Calibration: find δ so fresh match win from 0-0 = P_elo
+// p_fav = base+δ, p_und = base-δ
+function calibrate(base,Pelo){
+  const maxD=Math.min(base-0.02,0.98-base);
+  function compute(d){
+    const pf=base+d,pu=base-d;
+    const hf=gameProb(pf),hu=gameProb(pu);
+    const Saf=setWin(0,0,true,hf,hu,pf,pu);
+    const S=(Saf+setWin(0,0,false,hf,hu,pf,pu))/2;
+    return Saf*S*(2-S)+(1-Saf)*S*S;
+  }
+  let lo=0,hi=maxD;
+  for(let i=0;i<64;i++){const m=(lo+hi)/2; compute(m)<Pelo?lo=m:hi=m;}
+  return(lo+hi)/2;
+}
+
+// ── MAIN ─────────────────────────────────────────────────────
+function calc(){
+  const eA=parseFloat(document.getElementById('elo-a').value);
+  const eB=parseFloat(document.getElementById('elo-b').value);
+  const sA=parseInt(document.getElementById('sets-a').value)||0;
+  const sB=parseInt(document.getElementById('sets-b').value)||0;
+  const gA=parseInt(document.getElementById('games-a').value)||0;
+  const gB=parseInt(document.getElementById('games-b').value)||0;
+  const aServes=srv==='A';
+
+  const errEl=document.getElementById('err');
+  const resEl=document.getElementById('result');
+
+  function fail(msg){errEl.textContent=msg;errEl.classList.add('show');resEl.classList.remove('show');}
+  errEl.classList.remove('show');
+
+  if(isNaN(eA)||isNaN(eB)||eA<100||eB<100)return fail('יש להזין ערכי Elo תקינים לשני השחקנים');
+  if(eA===eB)return fail('Elo זהה לשני השחקנים — אנא הזן ערכים שונים');
+  if(sA<0||sA>1||sB<0||sB>1)return fail('סטים: ערכים חוקיים הם 0 או 1 בלבד');
+  if(sA+sB>2)return fail('סה"כ סטים לא יכול לעלות על 2 במשחק Bo3');
+  if(gA<0||gA>7||gB<0||gB>7)return fail('גיימים: ערכים חוקיים הם 0–7');
+
+  // Determine favorite
+  const favIsA=eA>eB;
+  const eloFav=Math.max(eA,eB), eloUnd=Math.min(eA,eB);
+  const gap=eloFav-eloUnd;
+
+  // Elo pre-match probability
+  const Pelo=1/(1+Math.pow(10,-gap/400));
+
+  // Remap to favorite's perspective
+  const sF=favIsA?sA:sB, sU=favIsA?sB:sA;
+  const gF=favIsA?gA:gB, gU=favIsA?gB:gA;
+  const favS=favIsA?aServes:!aServes;
+
+  // Calibrate serve probabilities
+  const base=BASE[tour][surf];
+  const delta=calibrate(base,Pelo);
+  const pf=base+delta, pu=base-delta;
+  const hf=gameProb(pf), hu=gameProb(pu);
+
+  // Compute
+  const prob=matchWin(sF,sU,gF,gU,favS,hf,hu,pf,pu);
+  const pct=Math.round(prob*1000)/10;
+  const prePct=Math.round(Pelo*1000)/10;
+
+  // Band
+  const band=gap<50?'E0':gap<150?'E1':gap<300?'E2':'E3';
+
+  // Display
+  const pEl=document.getElementById('r-pct');
+  let cls='hi';
+  if(pct<40)cls='crit'; else if(pct<55)cls='lo'; else if(pct<70)cls='mid';
+  pEl.textContent=pct.toFixed(1)+'%';
+  pEl.className='result-pct '+cls;
+
+  const bc={E0:'#4d9fff',E1:'#4d9fff',E2:'#00e5a0',E3:'#ffc947'};
+  const bEl=document.getElementById('r-band');
+  bEl.textContent=band+' · פער '+Math.round(gap)+' נקודות';
+  bEl.style.cssText=`color:${bc[band]};background:${bc[band]}18;border:1px solid ${bc[band]}44`;
+
+  document.getElementById('r-pre').textContent=prePct.toFixed(1)+'%';
+  document.getElementById('r-gap').textContent=Math.round(gap);
+  document.getElementById('r-surf').textContent={hard:'הארד',clay:'חימר',grass:'עשב'}[surf];
+  document.getElementById('r-who').textContent='הסתברות לניצחון — '+(favIsA?'שחקן A (מועדף)':'שחקן A (אנדרדוג)');
+
+  let note='[M] Markov Chain מכויל ל-Elo · '+{hard:'Hard',clay:'Clay',grass:'Grass'}[surf]+' baseline';
+  const diff=Math.abs(pct-prePct);
+  if(diff>10)note+=` · שינוי ${diff.toFixed(1)}pp ממצב 0-0`;
+  if(pct>=90)note+=' · מצב נדיר — בדוק מול מחיר שוק';
+  document.getElementById('r-note').textContent=note;
+
+  resEl.classList.add('show');
+  setTimeout(()=>resEl.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+
+setSurf('hard');
+</script>
+</body>
+</html>
